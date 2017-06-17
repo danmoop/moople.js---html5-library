@@ -10,7 +10,7 @@ var game = new moopleGame(800, 800, "canv", {update: update});
 //  update - function that is called 60 times per second
 ```
 
-Easy to background color
+Easy to set background color
 ```
 game.setColor("#27ae60");
 ```
