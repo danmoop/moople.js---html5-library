@@ -24,7 +24,6 @@ game.addSprite("Cat", 0, 0, 200, 200); // 0 - x, 0 - y, 200 - width and height
 
 Changing size and position
 ```
-
 game.setSize(sprite, 150, 150);
 game.setPos(sprite, 0, 100);
 ```
