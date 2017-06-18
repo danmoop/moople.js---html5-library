@@ -1,5 +1,5 @@
 function moopleGame(width, height, id, functions){
-
+	
 	document.body.style.overflow = "hidden"; // We don't need scrollBar
 	document.body.style.padding = 0; // We don't need borders around our window
 	document.body.style.margin = 0; // Same
@@ -11,7 +11,7 @@ function moopleGame(width, height, id, functions){
 		this.canvas = document.createElement("canvas");
 		this.canvas.setAttribute('width', this.width);
 		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id)
+		this.canvas.setAttribute('id', this.id);
 		document.body.appendChild(this.canvas);
 	}
 
@@ -22,7 +22,7 @@ function moopleGame(width, height, id, functions){
 		this.canvas = document.createElement("canvas");
 		this.canvas.setAttribute('width', this.width);
 		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id)
+		this.canvas.setAttribute('id', this.id);
 		document.body.appendChild(this.canvas);
 	}
 
@@ -33,7 +33,7 @@ function moopleGame(width, height, id, functions){
 		this.canvas = document.createElement("canvas");
 		this.canvas.setAttribute('width', this.width);
 		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id)
+		this.canvas.setAttribute('id', this.id);
 		document.body.appendChild(this.canvas);
 	}
 
@@ -44,12 +44,15 @@ function moopleGame(width, height, id, functions){
 		this.canvas = document.createElement("canvas");
 		this.canvas.setAttribute('width', this.width);
 		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id)
+		this.canvas.setAttribute('id', this.id);
 		document.body.appendChild(this.canvas);
 	}
 
 	/*    LOADED FILES  */
 	this.loadedSprites = [];
+
+	/*    ADDED FILES    */
+	this.addedSprites = [];
 
 	// Getting context 2d for our canvas
 	this.ctx = this.canvas.getContext("2d");
@@ -105,7 +108,7 @@ this._fps = function() {
     lastLoop = thisLoop;
     
     if(fps < 15){
-    	console.warn( "FPS is under 15");
+    	console.warn( " FPS is under 15");
     }
 
     return(Math.round(fps));	
@@ -127,49 +130,82 @@ moopleGame.prototype.loadSprite = function(sprite, name){
 
 moopleGame.prototype.addSprite = function(spritename, x, y, width, height){ // Add sprite to the screen
 	ctx = this.ctx;
-	for(var i = 0; i < this.loadedSprites.length; i++){ // Sprite will appear at x:y
-		if(spritename == this.loadedSprites[i].spriteName){ // We try to find sprite we need in all loaded sprites
-			var spriteImg = new Image();
-			spriteImg.src = this.loadedSprites[i].spriteSrc;
-			spriteImg.onload = function(){ // Draw sprite only when it's loaded
-				ctx.drawImage(spriteImg, x, y, width, height); // Simply add sprite to <canvas> (on x:y)
+	
+	if(typeof x === "number" && typeof y === "number"){
+		for(var i = 0; i < this.loadedSprites.length; i++){ // Sprite will appear at x:y
+			if(spritename == this.loadedSprites[i].spriteName){ // We try to find sprite we need in all loaded sprites
+				var spriteImg = new Image();
+
+				spriteImg.setAttribute('width', width);
+				spriteImg.setAttribute('height', height);
+
+				spriteImg.setAttribute('xCoord', x);
+				spriteImg.setAttribute('yCoord', y);
+
+				spriteImg.xcoord = x;
+				spriteImg.ycoord = y;
+
+				spriteImg.src = this.loadedSprites[i].spriteSrc;
+				spriteImg.onload = function(){ // Draw sprite only when it's loaded
+					ctx.drawImage(spriteImg, spriteImg.xcoord, spriteImg.ycoord, spriteImg.width, spriteImg.height); // Simply add sprite to <canvas> (on x:y)
+				}
+			}
+			else if(!spritename){
+				console.warn(" You didn't type the name of the sprite! It should be (type: String)");
+			}
+
+			else{
+				console.warn(" Can't find Sprite with name: "+spritename+". Check your loaded sprites and make sure name of sprite you want to add is the same as your loaded sprite");
 			}
 		}
-		else if(!spritename){
-			console.warn(" You didn't type the name of the sprite! It should be (type: String)");
+
+		spriteObj = {
+				"name" : spritename,
+				"width" : width,
+				"height" : height,
+				"x" : x,
+				"y" : y
 		}
 
-		else{
-			console.warn(" Can't find Sprite with name: "+spritename+". Check your loaded sprites and make sure name of sprite you want to add is the same as your loaded sprite");
-		}
+		this.addedSprites.push(spriteObj);
 	}
+
 	if(x == "center" && y == "center"){ // Sprite will appear at the center of the <canvas>
 		for(var i = 0; i < this.loadedSprites.length; i++){ // We try to find sprite we need in all loaded sprites
 			if(spritename == this.loadedSprites[i].spriteName){
 				var spriteImg = new Image();
+
+				spriteImg.setAttribute('width', width);
+				spriteImg.setAttribute('height', height);
+
 				spriteImg.src = this.loadedSprites[i].spriteSrc;
+
 				x = (this.width - width) / 2;
 				y = (this.height - height) / 2;
+
 				spriteImg.onload = function(){ // Draw sprite only when it's loaded
-					ctx.drawImage(spriteImg, x, y, width, height); // Simply add sprite to <canvas> (at the center)
+					ctx.drawImage(spriteImg, spriteImg.xcoord, spriteImg.ycoord, spriteImg.width, spriteImg.height); // Simply add sprite to <canvas> (on x:y)
 				}
 			}
 		}
+
 	}
+
 	else if(typeof spritename != "string"){
 		console.warn(" You must give a name of the sprite (type: String). But it seems that type of sprite you've given is: "+typeof spritename);
 	}
+
+	return spriteImg;
 }
 
-moopleGame.prototype.setSize = function(sprite, scaleX, scaleY){ // Set sprite size
-
+moopleGame.prototype.setSize = function(sprite, width, height){ // Set sprite size
+	sprite.width = width;
+	sprite.height = height;
 }
 
-moopleGame.prototype.setPos = function(sprite, newX, newY, width, height){ // Set new sprite position
-	ctx = this.ctx;
-	sprite.onload = function(){
-		ctx.drawImage(sprite, newX, newY, width, height);
-	}
+moopleGame.prototype.setPos = function(sprite, newX, newY){ // Set new sprite position
+	sprite.xcoord = newX;
+	sprite.ycoord = newY;
 }
 
 function Sprite(sprite,name){
