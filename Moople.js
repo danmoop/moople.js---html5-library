@@ -146,6 +146,7 @@ moopleGame.prototype.addSprite = function(spritename, x, y, width, height){ // A
 				spriteImg.ycoord = y;
 
 				spriteImg.src = this.loadedSprites[i].spriteSrc;
+
 				spriteImg.onload = function(){ // Draw sprite only when it's loaded
 					ctx.drawImage(spriteImg, spriteImg.xcoord, spriteImg.ycoord, spriteImg.width, spriteImg.height); // Simply add sprite to <canvas> (on x:y)
 				}
@@ -160,11 +161,12 @@ moopleGame.prototype.addSprite = function(spritename, x, y, width, height){ // A
 		}
 
 		spriteObj = {
-				"name" : spritename,
-				"width" : width,
-				"height" : height,
-				"x" : x,
-				"y" : y
+			"src" : spriteImg.src,
+			"name" : spritename,
+			"width" : width,
+			"height" : height,
+			"x" : x,
+			"y" : y
 		}
 
 		this.addedSprites.push(spriteObj);
@@ -201,11 +203,32 @@ moopleGame.prototype.addSprite = function(spritename, x, y, width, height){ // A
 moopleGame.prototype.setSize = function(sprite, width, height){ // Set sprite size
 	sprite.width = width;
 	sprite.height = height;
+
+	this.render(sprite, sprite.width, sprite.height, sprite.xcoord, sprite.ycoord);
 }
 
 moopleGame.prototype.setPos = function(sprite, newX, newY){ // Set new sprite position
 	sprite.xcoord = newX;
 	sprite.ycoord = newY;
+
+	this.render(sprite, sprite.width, sprite.height, sprite.xcoord, sprite.ycoord);
+}
+
+moopleGame.prototype.render = function(sprite, width, height, x, y){
+	ctx = this.ctx;
+
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+	ctx.fillStyle = this.gameColor;
+	ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    ctx.drawImage(sprite, x, y, width, height);
+
+    for(var i = 0; i < this.addedSprites.length; i++){
+    	var w = new Image();
+    	w.src = this.addedSprites[i].src;
+    	ctx.drawImage(w, this.addedSprites[i].x, this.addedSprites[i].y, this.addedSprites[i].width, this.addedSprites[i].height);
+	}
 }
 
 function Sprite(sprite,name){
