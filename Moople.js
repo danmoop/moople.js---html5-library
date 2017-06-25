@@ -130,7 +130,7 @@ this._fps = function()
     return(Math.round(fps));	
 }
 
-/* SPRITE FUNCTIONS */
+// SPRITE FUNCTIONS 
 
 moopleGame.prototype.loadSprite = function(sprite, name)
 {
@@ -239,7 +239,18 @@ moopleGame.prototype.setSize = function(sprite, width, height)
 	sprite.width = width;
 	sprite.height = height;
 
-	this.render(sprite, sprite.width, sprite.height, sprite.xcoord, sprite.ycoord);
+	for(var i = 0; i < this.addedSprites.length; i++)
+	{
+		if(sprite.id == this.addedSprites[i].id)
+		{
+			this.index = i;
+		}
+
+		this.addedSprites[this.index].width = width;
+		this.addedSprites[this.index].height = height;
+	}
+
+	this.render(sprite);
 }
 
 moopleGame.prototype.setPos = function(sprite, newX, newY)
@@ -275,7 +286,7 @@ moopleGame.prototype.renderObjects = function()
 	}
 }
 
-moopleGame.prototype.render = function(sprite) // Draw image to screen
+moopleGame.prototype.render = function(sprite, width, height) // Draw image to screen
 {
 	ctx = this.ctx;
 
@@ -283,7 +294,7 @@ moopleGame.prototype.render = function(sprite) // Draw image to screen
 	{
 		var q = new Image();
 		q.src = this.addedSprites[i].src;
-		ctx.drawImage(q, this.addedSprites[i].x, this.addedSprites[i].y, this.addedSprites[i].width, this.addedSprites[i].height);
+		ctx.drawImage(q, this.addedSprites[i].x, this.addedSprites[i].y,  this.addedSprites[i].width,  this.addedSprites[i].height);
 	}
 }
 
