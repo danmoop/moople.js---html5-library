@@ -1,2 +1,2 @@
 # source - app.js
-![alt text](preview.gif)
+![alt text](Preview.gif)
