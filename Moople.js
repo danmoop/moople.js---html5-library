@@ -249,17 +249,18 @@ moopleGame.prototype.setPos = function(sprite, newX, newY)
 
 	for(var i = 0; i < this.addedSprites.length; i++)
 	{
-		this.sprite_index = 0;
-
-		if(sprite.id == this.addedSprites[i].id) // Find index of that image in array
+		if(sprite.id == this.addedSprites[i].id)
 		{
-			this.sprite_index = i;
+			this.index = i;
 		}
 	}
 
+	this.addedSprites[this.index].x = newX;
+	this.addedSprites[this.index].y = newY;
+
 	this.renderObjects();
 
-	this.render(this.sprite_index, sprite.width, sprite.height, sprite.xcoord, sprite.ycoord);
+	this.render(sprite);
 }
 
 moopleGame.prototype.renderObjects = function()
@@ -267,26 +268,23 @@ moopleGame.prototype.renderObjects = function()
 	rendered = true;
 
 	if(rendered)
-	{
-		this.ctx.fillRect(0,0,800, 800);
+	{	
+		ctx = this.ctx;
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		this.ctx.fillRect(0,0,canvas.width, canvas.height);
 	}
 }
 
-moopleGame.prototype.render = function(index, width, height, x, y) // Draw image to screen
+moopleGame.prototype.render = function(sprite) // Draw image to screen
 {
 	ctx = this.ctx;
 
-
-	this.addedSprites[index].x = x;
-	this.addedSprites[index].y = y;
-
 	for(var i = 0; i < this.addedSprites.length; i++)
 	{
-		var w = new Image();
-		w.src = this.addedSprites[i].src;
-		ctx.drawImage(w, this.addedSprites[i].x, this.addedSprites[i].y, this.addedSprites[i].width, this.addedSprites[i].height);
+		var q = new Image();
+		q.src = this.addedSprites[i].src;
+		ctx.drawImage(q, this.addedSprites[i].x, this.addedSprites[i].y, this.addedSprites[i].width, this.addedSprites[i].height);
 	}
-
 }
 
 function Sprite(sprite,name)
