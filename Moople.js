@@ -59,6 +59,9 @@ function moopleGame(width, height, id, functions)
 	/*    ADDED FILES    */
 	this.addedSprites = [];
 
+	/*    ADDED TEXT     */
+	this.addedText = [];
+
 	// Getting context 2d for our canvas
 	this.ctx = this.canvas.getContext("2d");
 
@@ -83,9 +86,9 @@ function moopleGame(width, height, id, functions)
 
 /* SET COLOR AND FILL CANVAS      */
 
-//moopleGame.prototype.consoleTextMessage = function(){
-//	console.log ("%cMOOPLE.%cJS%c by Dan Durnev%c | %c Version: 0.1","background-color: #FFFFFF; color: #27ae60; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #9b59b6; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #2c3e50; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:55px; font-weight:bold;");
-//}
+moopleGame.prototype.consoleTextMessage = function(){
+	console.log ("%cMOOPLE.%cJS%c by Dan Durnev%c | %c Version: 0.1","background-color: #FFFFFF; color: #27ae60; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #9b59b6; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #2c3e50; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:55px; font-weight:bold;");
+}
 
 moopleGame.prototype.setColor = function(clr)
 { // Changing basic color (black) to any other
@@ -236,8 +239,16 @@ moopleGame.prototype.addSprite = function(spritename, id, x, y, width, height)
 
 moopleGame.prototype.setSize = function(sprite, width, height)
 { // Set sprite size
-	sprite.width = width;
-	sprite.height = height;
+
+	if(typeof width === 'number' && typeof height === 'number')
+	{
+		sprite.width = width;
+		sprite.height = height;
+	}
+	else
+	{
+		console.warn(' Width and height can only be typeof: number, but your type is: ' + typeof width);
+	}
 
 	for(var i = 0; i < this.addedSprites.length; i++)
 	{
@@ -257,8 +268,17 @@ moopleGame.prototype.setSize = function(sprite, width, height)
 
 moopleGame.prototype.setPos = function(sprite, newX, newY)
 { // Set new sprite position
-	sprite.xcoord = newX;
-	sprite.ycoord = newY;
+	
+	if(typeof newX === 'number' && typeof newY === 'number')
+	{
+		sprite.xcoord = newX;
+		sprite.ycoord = newY;
+	}
+
+	else
+	{
+		console.warn(" X and Y should be typeof: number, but your type is: " + typeof newX);
+	}
 
 	for(var i = 0; i < this.addedSprites.length; i++)
 	{
@@ -276,6 +296,21 @@ moopleGame.prototype.setPos = function(sprite, newX, newY)
 	this.render(sprite);
 }
 
+moopleGame.prototype.setTextPos = function(text, newX, newY)
+{
+	for(var i = 0; i < this.addedText.length; i++)
+	{
+		if(text.id == this.addedText[i].id)
+		{
+			this.index = i;
+		}
+	}
+
+	this.addedText[this.index].xcoord = newX;
+	this.addedText[this.index].ycoord = newY;
+
+}
+
 moopleGame.prototype.renderObjects = function()
 {
 	rendered = true;
@@ -287,21 +322,67 @@ moopleGame.prototype.renderObjects = function()
 		this.ctx.fillRect(0,0,canvas.width, canvas.height);
 	}
 
+	for(var i = 0; i < this.addedText.length; i++)
+	{
+		ctx.font = this.addedText[i].font;
+		ctx.fillStyle = this.addedText[i].color;
+		ctx.fillText(this.addedText[i].text, this.addedText[i].xcoord, this.addedText[i].ycoord);
+		ctx.fillStyle = this.gameColor;
+	}
+
 }
 
 moopleGame.prototype.render = function(sprite, width, height) // Draw image to screen
 {
 	ctx = this.ctx;
 
+	this.renderObjects();
 	for(var i = 0; i < this.addedSprites.length; i++)
 	{
 		var q = new Image();
 		q.src = this.addedSprites[i].src;
 		ctx.drawImage(q, this.addedSprites[i].x, this.addedSprites[i].y,  this.addedSprites[i].width,  this.addedSprites[i].height);
 	}
+
+	for(var i = 0; i < this.addedText.length; i++)
+	{
+		ctx.font = this.addedText[i].font;
+		ctx.fillStyle = this.addedText[i].color;
+		ctx.fillText(this.addedText[i].text, this.addedText[i].x, this.addedText[i].y);
+		ctx.fillStyle = this.gameColor;
+	}
 }
 
 //    SPRITE FUNCTIONS (ADD, LOAD, RENDER) END
+
+//    TEXT FUNCTIONS
+
+
+moopleGame.prototype.addText = function(text, id, font, color, textX, textY)
+{
+	ctx = this.ctx;
+	ctx.font = font;
+	ctx.fillStyle = color;
+	ctx.fillText(text, textX, textY);
+	ctx.fillStyle = this.gameColor;
+
+	var T = new moopleText(text, id, font, color, textX, textY);
+
+	this.addedText.push(T);
+
+	if(!text) console.warn(" you didn't write any text as a first parameter");
+	else if(!font) console.warn(" you didn't choose font for your text as a second parameter");
+	else if(!textX) console.warn(" you didn't write text X position as a third parameter");
+	else if(!textY) console.warn(" you didn't write text Y position as a fourth parameter");
+	else if(typeof font !== 'string') console.warn(' type of your font can only be string');
+	else if(typeof textX !== 'number') console.warn(' type of your text X position can only be a number');
+	else if(typeof textY !== 'number') console.warn(' type of your text Y position can only be number');
+
+	return T;
+
+}
+
+//    TEXT FUNCTIONS END
 
 function Sprite(sprite,name)
 {
@@ -309,5 +390,20 @@ function Sprite(sprite,name)
 		spriteSrc: sprite,
 		spriteName: name
 	}
+
 	return o;
+}
+
+function moopleText(txt, fnt, idd, clr, xpos, ypos)
+{
+	var t = {
+		text: txt,
+		font: fnt,
+		id: idd,
+		color: clr,
+		xcoord: xpos,
+		ycoord: ypos
+	}
+
+	return t;
 }
