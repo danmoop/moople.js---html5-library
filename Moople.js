@@ -1,6 +1,6 @@
 function moopleGame(width, height, id, functions)
 {
-	
+
 	document.body.style.overflow = "hidden"; // We don't need scrollBar
 	document.body.style.padding = 0; // We don't need borders around our window
 	document.body.style.margin = 0; // Same
@@ -130,7 +130,7 @@ this._fps = function()
     return(Math.round(fps));	
 }
 
-// SPRITE FUNCTIONS 
+//    SPRITE FUNCTIONS (ADD, LOAD, RENDER)
 
 moopleGame.prototype.loadSprite = function(sprite, name)
 {
@@ -182,6 +182,11 @@ moopleGame.prototype.addSprite = function(spritename, id, x, y, width, height)
 			{
 				console.warn(" You didn't type the name of the sprite! It should be (type: String)");
 			}
+
+			else if(!id)
+			{
+				console.warn( "You forgot to assign 'id' after sprite's name!");
+			}
 		}
 
 		spriteObj = {
@@ -229,11 +234,6 @@ moopleGame.prototype.addSprite = function(spritename, id, x, y, width, height)
 	return spriteImg;
 }
 
-moopleGame.prototype.addedObjects = function()
-{
-	return this.addedSprites;
-}
-
 moopleGame.prototype.setSize = function(sprite, width, height)
 { // Set sprite size
 	sprite.width = width;
@@ -250,6 +250,8 @@ moopleGame.prototype.setSize = function(sprite, width, height)
 		this.addedSprites[this.index].height = height;
 	}
 
+	this.renderObjects();
+	
 	this.render(sprite);
 }
 
@@ -284,6 +286,7 @@ moopleGame.prototype.renderObjects = function()
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		this.ctx.fillRect(0,0,canvas.width, canvas.height);
 	}
+
 }
 
 moopleGame.prototype.render = function(sprite, width, height) // Draw image to screen
@@ -297,6 +300,8 @@ moopleGame.prototype.render = function(sprite, width, height) // Draw image to s
 		ctx.drawImage(q, this.addedSprites[i].x, this.addedSprites[i].y,  this.addedSprites[i].width,  this.addedSprites[i].height);
 	}
 }
+
+//    SPRITE FUNCTIONS (ADD, LOAD, RENDER) END
 
 function Sprite(sprite,name)
 {
