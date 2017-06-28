@@ -1,7 +1,7 @@
 # moople.js---html5-library
 Library that makes canvas drawing a little bit easier.
 
-# What added for today: Addong sprites, SpriteMovement, Canvas camera, Changing size, Collision detection, Adding text, Changing text position
+# What added for today: Adding sprites, SpriteMovement, Canvas camera, Changing size, Collision detection, Adding text, Changing text position
 
 Easy to create canvas
 ```
