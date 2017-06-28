@@ -62,6 +62,9 @@ function moopleGame(width, height, id, functions)
 	/*    ADDED TEXT     */
 	this.addedText = [];
 
+	this.offsetX = 0;
+	this.offsetY = 0;
+
 	// Getting context 2d for our canvas
 	this.ctx = this.canvas.getContext("2d");
 
@@ -116,7 +119,7 @@ moopleGame.prototype.setColor = function(clr)
 moopleGame.prototype.fillCanvas = function()
 {
 	this.ctx.fillStyle = this.gameColor;
-	this.ctx.fillRect(0,0,this.width,this.height);
+	this.ctx.fillRect(-50000,-50000,55000, 55000);
 }
 
 /*     FPS COUNTER   */
@@ -298,10 +301,10 @@ moopleGame.prototype.setPos = function(sprite, newX, newY)
 moopleGame.prototype.renderObjects = function()
 {
 	ctx = this.ctx;
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	this.ctx.fillRect(0,0,canvas.width, canvas.height);
+	ctx.clearRect(-50000, -50000, 125000, 125000);
+	this.ctx.fillRect(-50000, -50000, 125000, 125000);
 
-	
+
 	for(var i = 0; i < this.addedText.length; i++)
 	{
 		ctx.font = this.addedText[i].font;
@@ -315,19 +318,6 @@ moopleGame.prototype.setTextPos = function(text, newX, newY)
 {
 	text.xcoord = newX;
 	text.ycoord = newY;
-}
-
-moopleGame.prototype.renderAllObjects = function()
-{
-	rendered = true;
-
-	if(rendered)
-	{	
-		ctx = this.ctx;
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		this.ctx.fillRect(0,0,canvas.width, canvas.height);
-	}
-
 }
 
 
@@ -385,6 +375,42 @@ moopleGame.prototype.setText = function(obj, text)
 }
 
 //    TEXT FUNCTIONS END
+
+//    COLLISION    
+
+moopleGame.prototype.collisionDetectedBetween = function(object1, object2){
+	if(object1.xcoord + object1.width > object2.xcoord 
+	&& object1.xcoord < object2.xcoord + object2.width 
+	&& object1.ycoord + object1.height > object2.ycoord 
+	&& object1.ycoord < object2.ycoord + object2.height)
+	{
+		return true;
+	}
+}
+
+//   CAMERA
+
+moopleGame.prototype.cameraGoUp = function(object, speed)
+{
+	ctx.translate(0, speed);
+}
+moopleGame.prototype.cameraGoDown = function(object, speed)
+{
+	ctx.translate(0, -speed);
+}
+
+moopleGame.prototype.cameraGoLeft = function(object, speed)
+{
+	ctx.translate(speed, 0);
+}
+
+moopleGame.prototype.cameraGoRight = function(object, speed)
+{
+	ctx.translate(-speed, 0);
+}
+
+
+//   CAMERA END
 
 function Sprite(sprite,name)
 {
