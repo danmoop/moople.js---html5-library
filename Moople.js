@@ -147,19 +147,18 @@ moopleGame.prototype.setBackground = function(img)
 moopleGame.prototype.fillCanvas = function()
 {
 	this.ctx.fillStyle = this.gameColor;
-	this.ctx.fillRect(this.minWorldX, this.maxWorldX, this.minWorldY, this.maxWorldY);
+	this.ctx.fillRect(this.minWorldX, this.minWorldY, this.maxWorldX, this.maxWorldY);
 }
 
 moopleGame.prototype.setWorldBounds = function(minX, maxX, minY, maxY)
 {
-	this.minX = minX;
-	this.maxX = maxX;
-	this.minY = minY;
-	this.maxY = maxY;
+	this.minWorldX = minX;
+	this.maxWorldX = maxX;
+	this.minWorldY = minY;
+	this.maxWorldY = maxY;
 }
 
 /*     FPS COUNTER   */
-
 
 var lastLoop = new Date;
 this._fps = function() 
@@ -341,8 +340,8 @@ moopleGame.prototype.setPos = function(sprite, newX, newY)
 moopleGame.prototype.renderObjects = function()
 {
 	ctx = this.ctx;
-	ctx.clearRect(this.minX, this.minY, this.maxX, this.maxY);
-	this.ctx.fillRect(this.minX, this.minY, this.maxX, this.maxY);
+	ctx.clearRect(this.minWorldX, this.minWorldY, this.maxWorldX, this.maxWorldY);
+	this.ctx.fillRect(this.minWorldX, this.minWorldY, this.maxWorldX, this.maxWorldY);
 
 
 	for(var i = 0; i < this.addedText.length; i++)
