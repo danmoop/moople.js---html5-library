@@ -62,9 +62,6 @@ function moopleGame(width, height, id, functions)
 	/*    ADDED TEXT     */
 	this.addedText = [];
 
-	this.offsetX = 0;
-	this.offsetY = 0;
-
 	// Getting context 2d for our canvas
 	this.ctx = this.canvas.getContext("2d");
 
@@ -435,9 +432,8 @@ moopleGame.prototype.collisionDetectedBetween = function(object1, object2){
 		&& object1.xcoord < object2.xcoord + object2.width 
 		&& object1.ycoord + object1.height > object2.ycoord 
 		&& object1.ycoord < object2.ycoord + object2.height)
-	{
+		
 		return true;
-	}
 }
 
 //   CAMERA
