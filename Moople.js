@@ -169,15 +169,10 @@ this._fps = function()
 moopleGame.prototype.loadSprite = function(sprite, name)
 {
 	
-	if(typeof sprite === "boolean")
-	{
-		warn(" Your sprite can't be a boolean");
-	}
-	else if(typeof sprite === "undefined")
-	{
-		warn(" Your sprite can't be undefined");
-	} else { // we can only add sprite that [Object] because we add a picture, no strings, integers etc.
+	if(typeof sprite === 'string'){
 		this.loadedSprites.push(new Sprite(sprite,name));
+	} else {
+		warn('your sprite can"t be typeof ' + typeof sprite);
 	}
 }
 
@@ -492,66 +487,27 @@ function moopleText(txt, idd, fnt, clr, xpos, ypos)
 	return t;
 }
 
-moopleGame.prototype.handleKeyboard = function()
-{
-	$(document).on('keydown', function(e){
-			if(e.key == "a" || e.key == "A"){moopleGame.prototype.aIsDown = true;}
-			else if(e.key == "b" || e.key == "C"){moopleGame.prototype.bIsDown = true;}
-			else if(e.key == "c" || e.key == "C"){moopleGame.prototype.cIsDown = true;}
-			else if(e.key == "d" || e.key == "D"){moopleGame.prototype.dIsDown = true;}
-			else if(e.key == "e" || e.key == "E"){moopleGame.prototype.eIsDown = true;}
-			else if(e.key == "f" || e.key == "F"){moopleGame.prototype.fIsDown = true;}
-			else if(e.key == "g" || e.key == "G"){moopleGame.prototype.gIsDown = true;}
-			else if(e.key == "h" || e.key == "H"){moopleGame.prototype.hIsDown = true;}
-			else if(e.key == "i" || e.key == "I"){moopleGame.prototype.iIsDown = true;}
-			else if(e.key == "j" || e.key == "J"){moopleGame.prototype.jIsDown = true;}
-			else if(e.key == "k" || e.key == "K"){moopleGame.prototype.kIsDown = true;}
-			else if(e.key == "l" || e.key == "L"){moopleGame.prototype.lIsDown = true;}
-			else if(e.key == "m" || e.key == "M"){moopleGame.prototype.mIsDown = true;}
-			else if(e.key == "n" || e.key == "N"){moopleGame.prototype.nIsDown = true;}
-			else if(e.key == "o" || e.key == "O"){moopleGame.prototype.oIsDown = true;}
-			else if(e.key == "p" || e.key == "P"){moopleGame.prototype.pIsDown = true;}
-			else if(e.key == "q" || e.key == "Q"){moopleGame.prototype.qIsDown = true;}
-			else if(e.key == "r" || e.key == "R"){moopleGame.prototype.rIsDown = true;}
-			else if(e.key == "s" || e.key == "S"){moopleGame.prototype.sIsDown = true;}
-			else if(e.key == "t" || e.key == "T"){moopleGame.prototype.tIsDown = true;}
-			else if(e.key == "u" || e.key == "U"){moopleGame.prototype.uIsDown = true;}
-			else if(e.key == "v" || e.key == "V"){moopleGame.prototype.vIsDown = true;}
-			else if(e.key == "w" || e.key == "W"){moopleGame.prototype.wIsDown = true;}
-			else if(e.key == "x" || e.key == "X"){moopleGame.prototype.xIsDown = true;}
-			else if(e.key == "y" || e.key == "Y"){moopleGame.prototype.yIsDown = true;}
-			else if(e.key == "z" || e.key == "Z"){moopleGame.prototype.zIsDown = true;}
-	}).on('keyup', function(e){
-			if(e.key == "a" || e.key == "A"){moopleGame.prototype.aIsDown = false;}
-			else if(e.key == "b" || e.key == "B"){moopleGame.prototype.bIsDown = false;}
-			else if(e.key == "c" || e.key == "C"){moopleGame.prototype.cIsDown = false;}
-			else if(e.key == "d" || e.key == "D"){moopleGame.prototype.dIsDown = false;}
-			else if(e.key == "e" || e.key == "E"){moopleGame.prototype.eIsDown = false;}
-			else if(e.key == "f" || e.key == "F"){moopleGame.prototype.fIsDown = false;}
-			else if(e.key == "g" || e.key == "G"){moopleGame.prototype.gIsDown = false;}
-			else if(e.key == "h" || e.key == "H"){moopleGame.prototype.hIsDown = false;}
-			else if(e.key == "i" || e.key == "I"){moopleGame.prototype.iIsDown = false;}
-			else if(e.key == "j" || e.key == "J"){moopleGame.prototype.jIsDown = false;}
-			else if(e.key == "k" || e.key == "K"){moopleGame.prototype.kIsDown = false;}
-			else if(e.key == "l" || e.key == "L"){moopleGame.prototype.lIsDown = false;}
-			else if(e.key == "m" || e.key == "M"){moopleGame.prototype.mIsDown = false;}
-			else if(e.key == "n" || e.key == "N"){moopleGame.prototype.nIsDown = false;}
-			else if(e.key == "o" || e.key == "O"){moopleGame.prototype.oIsDown = false;}
-			else if(e.key == "p" || e.key == "P"){moopleGame.prototype.pIsDown = false;}
-			else if(e.key == "q" || e.key == "Q"){moopleGame.prototype.qIsDown = false;}
-			else if(e.key == "r" || e.key == "R"){moopleGame.prototype.rIsDown = false;}
-			else if(e.key == "s" || e.key == "S"){moopleGame.prototype.sIsDown = false;}
-			else if(e.key == "t" || e.key == "T"){moopleGame.prototype.tIsDown = false;}
-			else if(e.key == "u" || e.key == "U"){moopleGame.prototype.uIsDown = false;}
-			else if(e.key == "v" || e.key == "V"){moopleGame.prototype.vIsDown = false;}
-			else if(e.key == "w" || e.key == "W"){moopleGame.prototype.wIsDown = false;}
-			else if(e.key == "x" || e.key == "X"){moopleGame.prototype.xIsDown = false;}
-			else if(e.key == "y" || e.key == "Y"){moopleGame.prototype.yIsDown = false;}
-			else if(e.key == "z" || e.key == "Z"){moopleGame.prototype.zIsDown = false;}
-	});
+function isLetter(key) {
+  return key >= 'a' || key <= 'z' || key >= 'A' || key <= 'Z';
 }
 
+moopleGame.prototype.handleKeyboard = function()
+{
+  var _this = this;
 
+  $(document).on('keydown', function(e){
+    if (isLetter(e.key)) {
+      var property = e.key.toLowerCase() + 'IsDown';
+      _this[property] = true;
+    }
+  })
+  .on('keyup', function(e){
+    if (isLetter(e.key)) {
+      var property = e.key.toLowerCase() + 'IsDown';
+      _this[property] = false;
+    }
+  });
+}
 // I'm so lazy so I want to write "warn" instead of "console.warn" :(
 function log(msg)
 {
