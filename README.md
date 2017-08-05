@@ -29,3 +29,13 @@ Changing size and position
 game.setSize(sprite, 150, 150);
 game.setPos(sprite, 0, 100);
 ```
+
+Creating canvas text
+```
+text = game.addText('enemy1', 'mytext', '30px Arial', 'red', 200, 100);
+1st parameter - text
+2nd parameter - id
+3rd parameter - font and size
+4th parameter - color
+5 and 6 - x and y positions
+```
