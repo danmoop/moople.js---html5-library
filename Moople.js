@@ -79,10 +79,10 @@ function moopleGame(width, height, id, functions)
 	} 
 	else 
 	{
-		console.warn(" update function can only be an Object");
+		warn(" update function can only be an Object, but your type is: " + typeof functions);
 	}
 
-	this.consoleTextMessage();
+	//this.consoleTextMessage();
 
 } /* moopleGame FUNCTION ==END==  */
 
@@ -94,23 +94,13 @@ moopleGame.prototype.consoleTextMessage = function(){
 
 moopleGame.prototype.setColor = function(clr)
 { // Changing basic color (black) to any other
-	if(typeof clr === "number")
-	{
-		console.warn(" Color can't be an integer");
-	}
-	else if(typeof clr === "undefined")
-	{
-		console.warn(" Color can't be undefined");
-	} 
-	else if(typeof clr === "boolean")
-	{
-		console.warn(" Color can't be a boolean");
-	} 
-	else 
+	if(typeof clr === 'string') 
 	{
 		this.gameColor = clr;
 		this.fillCanvas();
 	}
+	else
+		warn('color can"t be typeof: ' + typeof clr+". Only a string");
 }
 
 moopleGame.prototype.setBackground = function(img)
@@ -136,7 +126,10 @@ moopleGame.prototype.setBackground = function(img)
 		"id" : img
 	}
 
-	this.addedSprites.push(backgroundObj);
+	if(img)
+		this.addedSprites.push(backgroundObj);
+	else
+		warn('can"t find background image on: ' + img);
 
 	return background;
 }
@@ -165,7 +158,7 @@ this._fps = function()
 	lastLoop = thisLoop;
 
 	if(fps < 15){
-		console.warn( " FPS is under 15");
+		warn( " FPS is under 15");
 	}
 
 	return(Math.round(fps));	
@@ -178,11 +171,11 @@ moopleGame.prototype.loadSprite = function(sprite, name)
 	
 	if(typeof sprite === "boolean")
 	{
-		console.warn(" Your sprite can't be a boolean");
+		warn(" Your sprite can't be a boolean");
 	}
 	else if(typeof sprite === "undefined")
 	{
-		console.warn(" Your sprite can't be undefined");
+		warn(" Your sprite can't be undefined");
 	} else { // we can only add sprite that [Object] because we add a picture, no strings, integers etc.
 		this.loadedSprites.push(new Sprite(sprite,name));
 	}
@@ -221,12 +214,12 @@ moopleGame.prototype.addSprite = function(spritename, id, x, y, width, height)
 
 			else if(!spritename)
 			{
-				console.warn(" You didn't type the name of the sprite! It should be (type: String)");
+				warn(" You didn't type the name of the sprite! It should be (type: String)");
 			}
 
 			else if(!id)
 			{
-				console.warn( "You forgot to assign 'id' after sprite's name!");
+				warn( "You forgot to assign 'id' after sprite's name!");
 			}
 		}
 
@@ -269,7 +262,7 @@ moopleGame.prototype.addSprite = function(spritename, id, x, y, width, height)
 
 	else if(typeof spritename != "string")
 	{
-		console.warn(" You must give a name of the sprite (type: String). But it seems that type of sprite you've given is: "+typeof spritename);
+		warn(" You must give a name of the sprite (type: String). But it seems that type of sprite you've given is: "+typeof spritename);
 	}
 
 	return spriteImg;
@@ -285,7 +278,7 @@ moopleGame.prototype.setSize = function(sprite, width, height)
 	}
 	else
 	{
-		console.warn(' Width and height can only be typeof: number, but your type is: ' + typeof width);
+		warn(' Width and height can only be typeof: number, but your type is: ' + typeof width);
 	}
 
 	for(var i = 0; i < this.addedSprites.length; i++)
@@ -315,7 +308,7 @@ moopleGame.prototype.setPos = function(sprite, newX, newY)
 
 	else
 	{
-		console.warn(" X and Y should be typeof: number, but your type is: " + typeof newX);
+		warn(" X and Y should be typeof: number, but your type is: " + typeof newX);
 	}
 
 	for(var i = 0; i < this.addedSprites.length; i++)
@@ -340,7 +333,6 @@ moopleGame.prototype.renderObjects = function()
 	ctx.clearRect(this.minWorldX, this.minWorldY, this.maxWorldX, this.maxWorldY);
 	this.ctx.fillRect(this.minWorldX, this.minWorldY, this.maxWorldX, this.maxWorldY);
 
-
 	for(var i = 0; i < this.addedText.length; i++)
 	{
 		ctx.font = this.addedText[i].font;
@@ -359,11 +351,16 @@ moopleGame.prototype.renderObjects = function()
 
 moopleGame.prototype.destroySprite = function(sprite)
 {
-	for(var i = 0; i < this.addedSprites.length; i++)
+	if(!sprite)
+		warn('can"t find sprite: ' + sprite);
+	else
 	{
-		if(sprite != null && sprite.id == this.addedSprites[i].id)
+		for(var i = 0; i < this.addedSprites.length; i++)
 		{
-			spriteIndex = i;
+			if(sprite != null && sprite.id == this.addedSprites[i].id)
+			{
+				spriteIndex = i;
+			}
 		}
 	}
 
@@ -412,6 +409,9 @@ moopleGame.prototype.addText = function(text, id, font, color, textX, textY)
 moopleGame.prototype.setText = function(obj, text)
 {
 	
+	if(!obj || !text)
+		warn('you didn"t set object or text as your parameters');
+
 	for(var i = 0; i < this.addedText.length; i++)
 	{
 		if(obj.id == this.addedText[i].id)
@@ -440,34 +440,36 @@ moopleGame.prototype.collisionDetectedBetween = function(object1, object2){
 
 moopleGame.prototype.cameraGoUp = function(speed)
 {
-	ctx.translate(0, speed); // Camera will move to right with the same speed as gameobject
+	ctx.translate(0, speed); // Camera will move up with the same speed as gameobject
 }
 moopleGame.prototype.cameraGoDown = function(speed)
 {
-	ctx.translate(0, -speed); // Camera will move to right with the same speed as gameobject
+	ctx.translate(0, -speed); // Camera will move down with the same speed as gameobject
 }
 
 moopleGame.prototype.cameraGoLeft = function(speed)
 {
-	ctx.translate(speed, 0); // Camera will move to right with the same speed as gameobject
+	ctx.translate(speed, 0); // Camera will move left with the same speed as gameobject
 }
 
 moopleGame.prototype.cameraGoRight = function(speed)
 {
-	ctx.translate(-speed, 0); // Camera will move to right with the same speed as gameobject
+	ctx.translate(-speed, 0); // Camera will move right with the same speed as gameobject
 }
-
 
 //   CAMERA END
 
 function Sprite(sprite,name)
 {
-	var o = {
+	var image_of_the_sprite = {
 		spriteSrc: sprite,
 		spriteName: name
 	}
 
-	return o;
+	if(!sprite || !name)
+		warn("You didn't set sprite object or it's name");
+
+	return image_of_the_sprite;
 }
 
 function moopleText(txt, idd, fnt, clr, xpos, ypos)
@@ -479,6 +481,12 @@ function moopleText(txt, idd, fnt, clr, xpos, ypos)
 		color: clr,
 		xcoord: xpos,
 		ycoord: ypos
+	}
+
+	if(!txt || !idd || !fnt || !clr || !xpos || !ypos){
+		warn("Some parameter is missing in your 'addText' function");
+		warn("function is: function moopleText(text, id, font, color, xpos, ypos)");
+		warn("Example: addText('hello there', '30px Arial', 'green', 100, 100)");
 	}
 
 	return t;
@@ -541,4 +549,16 @@ moopleGame.prototype.handleKeyboard = function()
 			else if(e.key == "y" || e.key == "Y"){moopleGame.prototype.yIsDown = false;}
 			else if(e.key == "z" || e.key == "Z"){moopleGame.prototype.zIsDown = false;}
 	});
+}
+
+
+// I'm so lazy so I want to write "warn" instead of "console.warn" :(
+function log(msg)
+{
+	console.log(msg);
+}
+
+function warn(msg)
+{
+	console.warn(msg);
 }
