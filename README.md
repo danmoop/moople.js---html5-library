@@ -21,7 +21,7 @@ Easy to load and add sprite
 ```
 game.loadSprite("Cat.png", "Cat");
 
-game.addSprite("Cat", 0, 0, 200, 200); // 0 - x, 0 - y, 200 - width and height
+var sprite = game.addSprite("Cat", 0, 0, 200, 200); // 0 - x, 0 - y, 200 - width and height
 ```
 
 Changing size and position
