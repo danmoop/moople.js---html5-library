@@ -16,31 +16,7 @@ function moopleGame(width, height, id, functions)
 		this.canvas.setAttribute('id', this.id);
 		document.body.appendChild(this.canvas);
 	}
-
-	if(width == "fullScreen" && height != "fullScreen")
-	{
-		this.width = window.innerWidth;
-		this.height = height;
-		this.id = id;
-		this.canvas = document.createElement("canvas");
-		this.canvas.setAttribute('width', this.width);
-		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id);
-		document.body.appendChild(this.canvas);
-	}
-
-	if(width != "fullScreen" && height == "fullScreen")
-	{
-		this.width = width;
-		this.height = window.innerHeight;
-		this.id = id;
-		this.canvas = document.createElement("canvas");
-		this.canvas.setAttribute('width', this.width);
-		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id);
-		document.body.appendChild(this.canvas);
-	}
-
+	
 	if(width == "fullScreen" && height == "fullScreen")
 	{
 		this.width = window.innerWidth;
@@ -71,6 +47,11 @@ function moopleGame(width, height, id, functions)
 
 	this.edited = 0;
 
+	// I'm so lazy so I want to write "warn" instead of "console.warn" :(
+
+	log = console.log;
+	warn = console.warn;
+
 	// FUNCTIONS (LOAD, CREATE, UPDATE)
 
 	if(typeof functions === "object")
@@ -84,12 +65,14 @@ function moopleGame(width, height, id, functions)
 
 	//this.consoleTextMessage();
 
+	canvas.addEventListener('mousemove', mouseHandler);
+
 } /* moopleGame FUNCTION ==END==  */
 
 /* SET COLOR AND FILL CANVAS      */
 
 moopleGame.prototype.consoleTextMessage = function(){
-	console.log ("%cMOOPLE.%cJS%c by Dan Durnev%c | %c Version: 0.1","background-color: #FFFFFF; color: #27ae60; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #9b59b6; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #2c3e50; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:15px; font-weight:bold;");
+	console.log("%cMOOPLE.%cJS%c by Dan Durnev%c | %c Version: 0.1","background-color: #FFFFFF; color: #27ae60; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #9b59b6; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #2c3e50; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:15px; font-weight:bold;");
 }
 
 moopleGame.prototype.setColor = function(clr)
@@ -372,7 +355,8 @@ moopleGame.prototype.setTextPos = function(text, newX, newY)
 	text.ycoord = newY;
 }
 
-moopleGame.prototype.pluralObjects = function()
+moopleGame.prototype.pluralObjects = function() // this function is used for object's ID. For example - bullets.
+// You can't give special ID to bullets. There a lot of them. So this functions is going to generate ID for all of them.
 {
 	var text = "";
 	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -487,34 +471,22 @@ function moopleText(txt, idd, fnt, clr, xpos, ypos)
 	return t;
 }
 
-function isLetter(key) {
-  return key >= 'a' || key <= 'z' || key >= 'A' || key <= 'Z';
-}
-
 moopleGame.prototype.handleKeyboard = function()
 {
   var _this = this;
 
   $(document).on('keydown', function(e){
-    if (isLetter(e.key)) {
       var property = e.key.toLowerCase() + 'IsDown';
       _this[property] = true;
-    }
   })
   .on('keyup', function(e){
-    if (isLetter(e.key)) {
       var property = e.key.toLowerCase() + 'IsDown';
       _this[property] = false;
-    }
   });
 }
-// I'm so lazy so I want to write "warn" instead of "console.warn" :(
-function log(msg)
-{
-	console.log(msg);
-}
 
-function warn(msg)
+function mouseHandler(mouseInfo)
 {
-	console.warn(msg);
+	moopleGame.prototype.mouseX = mouseInfo.screenX;
+	moopleGame.prototype.mouseY = mouseInfo.clientY;
 }
