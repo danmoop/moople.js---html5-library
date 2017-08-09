@@ -494,14 +494,9 @@ function mouseHandler(mouseInfo)
 
 function clickHandler(clickInfo)
 {
+	moopleGame.prototype.clickCounter = 0;
 	moopleGame.prototype.mouseDownX = clickInfo.screenX;
 	moopleGame.prototype.mouseDownY = clickInfo.clientY;
-	
-	setTimeout(function(){ // I didn't find the better solution for click detection. If I don't have timeout,
-		// it's just always true until you press somewhere else
-		moopleGame.prototype.mouseDownX = null;
-		moopleGame.prototype.mouseDownY = null;
-	}, 0.0000001);
 }
 
 moopleGame.prototype.isClickedOn = function(object)
@@ -509,7 +504,13 @@ moopleGame.prototype.isClickedOn = function(object)
 	if(this.mouseDownX > object.xcoord
 		&& this.mouseDownX < object.xcoord + object.width
 		&& this.mouseDownY > object.ycoord
-		&& this.mouseDownY < object.ycoord + object.height)
-
+		&& this.mouseDownY < object.ycoord + object.height && moopleGame.prototype.clickCounter == 0) {
+	
+		moopleGame.prototype.clickCounter = 1;
 		return true;
+	}
+
+	else if(moopleGame.prototype.clickCounter == 1)
+		return false;
+
 }
