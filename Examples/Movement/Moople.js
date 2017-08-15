@@ -1,299 +1,178 @@
-function moopleGame(width, height, id, functions)
+class MoopleGame
 {
-	
-	document.body.style.overflow = "hidden"; // We don't need scrollBar
-	document.body.style.padding = 0; // We don't need borders around our window
-	document.body.style.margin = 0; // Same
-
-	if(width != "fullScreen" && height != "fullScreen")
+	constructor(width, height, id, functions)
 	{
-		this.width = width;
-		this.height = height;
-		this.id = id;
-		this.canvas = document.createElement("canvas");
-		this.canvas.setAttribute('width', this.width);
-		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id);
-		document.body.appendChild(this.canvas);
-	}
+		if(!width || !height || !id || !functions)
+			warn("You've missed some parameter in 'new MoopleGame'");
 
-	if(width == "fullScreen" && height != "fullScreen")
-	{
-		this.width = window.innerWidth;
-		this.height = height;
-		this.id = id;
-		this.canvas = document.createElement("canvas");
-		this.canvas.setAttribute('width', this.width);
-		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id);
-		document.body.appendChild(this.canvas);
-	}
-
-	if(width != "fullScreen" && height == "fullScreen")
-	{
-		this.width = width;
-		this.height = window.innerHeight;
-		this.id = id;
-		this.canvas = document.createElement("canvas");
-		this.canvas.setAttribute('width', this.width);
-		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id);
-		document.body.appendChild(this.canvas);
-	}
-
-	if(width == "fullScreen" && height == "fullScreen")
-	{
-		this.width = window.innerWidth;
-		this.height = window.innerHeight;
-		this.id = id;
-		this.canvas = document.createElement("canvas");
-		this.canvas.setAttribute('width', this.width);
-		this.canvas.setAttribute('height', this.height);
-		this.canvas.setAttribute('id', this.id);
-		document.body.appendChild(this.canvas);
-	}
-
-	/*    LOADED FILES  */
-	this.loadedSprites = [];
-
-	/*    ADDED FILES    */
-	this.addedSprites = [];
-
-	// Getting context 2d for our canvas
-	this.ctx = this.canvas.getContext("2d");
-
-	this.fillCanvas(); // Fill color and create Rectangle
-
-	canvas = this.canvas;
-
-	// FUNCTIONS (LOAD, CREATE, UPDATE)
-
-	if(typeof functions === "object")
-	{
-		setInterval(functions.update, 1000/60); // Update function
-	} 
-	else 
-	{
-		console.warn(" update function can only be an Object");
-	}
-
-	//this.consoleTextMessage();
-
-} /* moopleGame FUNCTION ==END==  */
-
-/* SET COLOR AND FILL CANVAS      */
-
-//moopleGame.prototype.consoleTextMessage = function(){
-//	console.log ("%cMOOPLE.%cJS%c by Dan Durnev%c | %c Version: 0.1","background-color: #FFFFFF; color: #27ae60; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #9b59b6; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #2c3e50; font-size:55px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:55px; font-weight:bold;");
-//}
-
-moopleGame.prototype.setColor = function(clr)
-{ // Changing basic color (black) to any other
-	if(typeof clr === "number")
-	{
-		console.warn(" Color can't be an integer");
-	}
-	else if(typeof clr === "undefined")
-	{
-		console.warn(" Color can't be undefined");
-	} 
-	else if(typeof clr === "boolean")
-	{
-		console.warn(" Color can't be a boolean");
-	} 
-	else 
-	{
-		this.gameColor = clr;
-		this.fillCanvas();
-	}
-}
-
-moopleGame.prototype.fillCanvas = function()
-{
-	this.ctx.fillStyle = this.gameColor;
-	this.ctx.fillRect(0,0,this.width,this.height);
-}
-
-/*     FPS COUNTER   */
-
-var lastLoop = new Date;
-this._fps = function() 
-{ 
-    var thisLoop = new Date;
-    var fps = 1000 / (thisLoop - lastLoop);
-    lastLoop = thisLoop;
-    
-    if(fps < 15){
-    	console.warn( " FPS is under 15");
-    }
-
-    return(Math.round(fps));	
-}
-
-/* SPRITE FUNCTIONS */
-
-moopleGame.prototype.loadSprite = function(sprite, name)
-{
-	
-	if(typeof sprite === "boolean")
-	{
-		console.warn(" Your sprite can't be a boolean");
-	}
-	else if(typeof sprite === "undefined")
-	{
-		console.warn(" Your sprite can't be undefined");
-	} else { // we can only add sprite that [Object] because we add a picture, no strings, integers etc.
-		this.loadedSprites.push(new Sprite(sprite,name));
-	}
-}
-
-moopleGame.prototype.addSprite = function(spritename, id, x, y, width, height)
-{ // Add sprite to the screen
-	ctx = this.ctx;
-	
-	if(typeof x === "number" && typeof y === "number")
-	{
-		for(var i = 0; i < this.loadedSprites.length; i++)
-		{ // Sprite will appear at x:y
-			if(spritename == this.loadedSprites[i].spriteName)
-			{ // We try to find sprite we need in all loaded sprites
-				var spriteImg = new Image();
-
-				spriteImg.setAttribute('width', width);
-				spriteImg.setAttribute('height', height);
-
-				spriteImg.setAttribute('xCoord', x);
-				spriteImg.setAttribute('yCoord', y);
-
-				spriteImg.setAttribute('id', id);
-
-				spriteImg.xcoord = x;
-				spriteImg.ycoord = y;
-
-				spriteImg.src = this.loadedSprites[i].spriteSrc;
-
-				spriteImg.onload = function()
-				{ // Draw sprite only when it's loaded
-					ctx.drawImage(spriteImg, spriteImg.xcoord, spriteImg.ycoord, spriteImg.width, spriteImg.height); // Simply add sprite to <canvas> (on x:y)
-				}
-			}
-
-			else if(!spritename)
-			{
-				console.warn(" You didn't type the name of the sprite! It should be (type: String)");
-			}
-		}
-
-		spriteObj = {
-			"src" : spriteImg.src,
-			"name" : spritename,
-			"width" : width,
-			"height" : height,
-			"id": id,
-			"x" : x,
-			"y" : y
-		}
-
-		this.addedSprites.push(spriteObj);
-	}
-
-	if(x == "center" && y == "center"){ // Sprite will appear at the center of the <canvas>
-		for(var i = 0; i < this.loadedSprites.length; i++)
-		{ // We try to find sprite we need in all loaded sprites
-			if(spritename == this.loadedSprites[i].spriteName)
-			{
-				var spriteImg = new Image();
-
-				spriteImg.setAttribute('width', width);
-				spriteImg.setAttribute('height', height);
-
-				spriteImg.src = this.loadedSprites[i].spriteSrc;
-
-				x = (this.width - width) / 2;
-				y = (this.height - height) / 2;
-
-				spriteImg.onload = function()
-				{ // Draw sprite only when it's loaded
-					ctx.drawImage(spriteImg, spriteImg.xcoord, spriteImg.ycoord, spriteImg.width, spriteImg.height); // Simply add sprite to <canvas> (on x:y)
-				}
-			}
-		}
-
-	}
-
-	else if(typeof spritename != "string")
-	{
-		console.warn(" You must give a name of the sprite (type: String). But it seems that type of sprite you've given is: "+typeof spritename);
-	}
-
-	return spriteImg;
-}
-
-moopleGame.prototype.addedObjects = function()
-{
-	return this.addedSprites;
-}
-
-moopleGame.prototype.setSize = function(sprite, width, height)
-{ // Set sprite size
-	sprite.width = width;
-	sprite.height = height;
-
-	this.render(sprite, sprite.width, sprite.height, sprite.xcoord, sprite.ycoord);
-}
-
-moopleGame.prototype.setPos = function(sprite, newX, newY)
-{ // Set new sprite position
-	sprite.xcoord = newX;
-	sprite.ycoord = newY;
-
-	for(var i = 0; i < this.addedSprites.length; i++)
-	{
-		this.sprite_index = 0;
-
-		if(sprite.id == this.addedSprites[i].id) // Find index of that image in array
+		else
 		{
-			this.sprite_index = i;
+			MoopleGame.canvas = document.createElement('canvas');
+			MoopleGame.ctx = MoopleGame.canvas.getContext('2d');
+			MoopleGame.canvas.setAttribute("width", width);
+			MoopleGame.canvas.setAttribute("height", height);
+			MoopleGame.canvas.setAttribute("id", id);
+			document.body.appendChild(MoopleGame.canvas);
+			if(typeof functions === 'object')
+				setInterval(functions.update, 1);
+			else
+				warn('typeof update function should be "object". But your type is ' + typeof functions);
+		}
+	}
+}
+
+class Scene
+{
+	constructor()
+	{
+		this.shown = false;
+		this.gameObjects = [];
+		this.gameText = [];
+	}
+
+	show()
+	{
+		this.shown = true;
+	}
+
+	hide()
+	{
+		this.shown = false;
+	}
+
+	toggle()
+	{
+		this.shown = !this.shown;
+	}
+
+	setColor(color)
+	{
+		this.gameColor = color;
+	}
+
+	addSprite(source, xcoord, ycoord, w, h)
+	{
+		var Sprite = {
+			src: source,
+			x: xcoord,
+			y: ycoord,
+			width: w,
+			height: h
+		}
+
+		this.gameObjects.push(Sprite);
+
+		var img = new Image();
+		img.src = Sprite.src;
+		img.width = Sprite.width;
+		img.height = Sprite.height;
+		img.setAttribute("xcoord", Sprite.x);
+		img.setAttribute("ycoord", Sprite.y);
+
+		img.xcoord = xcoord;
+		img.ycoord = ycoord;
+
+		if(this.shown)
+		{
+			img.onload = function()
+			{
+				this.ctx = MoopleGame.ctx;
+				this.ctx.drawImage(img, img.xcoord, img.ycoord, img.width, img.height);
+			}
+		}
+
+		return Sprite;
+	}
+
+	addText(txt, fnt, clr, txtX, txtY)
+	{	
+		if(this.shown)
+		{
+			var Text = {
+				text: txt,
+				font: fnt,
+				color: clr,
+				x: txtX,
+				y: txtY
+			}
+
+			this.gameText.push(Text);
+
+			this.ctx = MoopleGame.ctx;
+			this.ctx.font = fnt;
+			this.ctx.fillStyle = clr;
+			this.ctx.fillText(txt, txtX, txtY);
+			this.ctx.fillStyle = this.gameColor;
+
+			return Text;
 		}
 	}
 
-	this.renderObjects();
-
-	this.render(this.sprite_index, sprite.width, sprite.height, sprite.xcoord, sprite.ycoord);
-}
-
-moopleGame.prototype.renderObjects = function()
-{
-	rendered = true;
-
-	if(rendered)
+	destroySprite(sprite)
 	{
-		this.ctx.fillRect(0,0,800, 800);
+		var destroyIndex = this.gameObjects.indexOf(sprite);
+		this.gameObjects.splice(destroyIndex, 1);
 	}
-}
 
-moopleGame.prototype.render = function(index, width, height, x, y) // Draw image to screen
-{
-	ctx = this.ctx;
-
-
-	this.addedSprites[index].x = x;
-	this.addedSprites[index].y = y;
-
-	for(var i = 0; i < this.addedSprites.length; i++)
+	destroyText(text)
 	{
-		var w = new Image();
-		w.src = this.addedSprites[i].src;
-		ctx.drawImage(w, this.addedSprites[i].x, this.addedSprites[i].y, this.addedSprites[i].width, this.addedSprites[i].height);
+		var destroyTIndex = this.gameText.indexOf(text);
+		this.gameObjects.splice(destroyTIndex, 1);		
 	}
 
+	update()
+	{
+		if(this.shown)
+		{
+			this.ctx = MoopleGame.ctx;
+			this.ctx.clearRect(0,0,900,600);
+
+			this.ctx.fillRect(0,0,900,600);
+
+			this.ctx.fillStyle = this.gameColor;
+			this.ctx.fillRect(0,0,900,600);
+
+			for(var i = 0; i < this.gameObjects.length; i++)
+			{
+				var q = new Image();
+				q.src = this.gameObjects[i].src;
+				this.ctx.drawImage(q, this.gameObjects[i].x, this.gameObjects[i].y, this.gameObjects[i].width, this.gameObjects[i].height);
+			}
+
+			for(var i = 0; i < this.gameText.length; i++)
+			{
+				this.ctx.font = this.gameText[i].font;
+				this.ctx.fillStyle = this.gameText[i].color;
+				this.ctx.fillText(this.gameText[i].text, this.gameText[i].x, this.gameText[i].y);
+				this.ctx.fillStyle = this.gameColor;
+			}
+		}
+	}
+
+	collisionDetectedBetween(object1, object2)
+	{
+		if(object1.x + object1.width > object2.x 
+			&& object1.x < object2.x + object2.width 
+			&& object1.y + object1.height > object2.y 
+			&& object1.y < object2.y + object2.height)
+			
+			return true;
+	}
 }
 
-function Sprite(sprite,name)
+Scene.prototype.handleKeyboard = function()
 {
-	var o = {
-		spriteSrc: sprite,
-		spriteName: name
-	}
-	return o;
+	_this = this;
+
+	document.addEventListener('keydown', function(e){
+		var property = e.key.toLowerCase() + 'IsDown';
+		_this[property] = true;
+	})
+	document.addEventListener('keyup', function(e){
+		var property = e.key.toLowerCase() + 'IsDown';
+		_this[property] = false;
+	});
 }
+
+log = console.log;
+warn = console.warn;

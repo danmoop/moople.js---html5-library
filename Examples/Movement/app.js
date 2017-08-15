@@ -1,18 +1,11 @@
-window.addEventListener("keypress", keyDown, true);
-var game = new moopleGame(800, 800, "canv", {update: update});
-game.setColor("#27ae60");
+var game = new MoopleGame(900, 600, "canv", {update: update});
 
-game.loadSprite("Cat.png", "Cat");
-game.loadSprite("Doge.png", "Doge");
+firstScene = new Scene();
+firstScene.show();
+cat = firstScene.addSprite('Cat.png', 0,0, 100, 100);
 
-my_Doge = game.addSprite("Doge", "mydoggy", 0, 700, 100, 100);
-my_Cat = game.addSprite("Cat", "mycat", 0, 0, 100, 100);
-
-function update(){
-	game.setPos(my_Cat, my_Cat.xcoord+=2, my_Cat.ycoord+=2);
-	game.setPos(my_Doge, my_Doge.xcoord+=2, my_Doge.ycoord-=2);
-}
-
-function keyDown(e) {
-	
+function update()
+{
+	firstScene.update();
+	cat.x++;
 }
