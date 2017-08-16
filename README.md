@@ -47,7 +47,7 @@ Creating canvas text
 ```
 text = myScene.addText('enemy1', '30px Arial', 'red', 200, 100);
 1st parameter - text
-3rd parameter - font and size
-4th parameter - color
-5 and 6 - x and y positions
+2rd parameter - font and size
+3th parameter - color
+4 and 5 - x and y positions
 ```
