@@ -13,11 +13,53 @@ class MoopleGame
 			MoopleGame.canvas.setAttribute("height", height);
 			MoopleGame.canvas.setAttribute("id", id);
 			document.body.appendChild(MoopleGame.canvas);
+			MoopleGame.canvas.addEventListener('mousemove', this.mouseHandler);
+			MoopleGame.canvas.addEventListener('click', this.clickHandler);
 			if(typeof functions === 'object')
 				setInterval(functions.update, 1);
 			else
 				warn('typeof update function should be "object". But your type is ' + typeof functions);
 		}
+	}
+
+	mouseHandler(mouseInfo)
+	{
+		MoopleGame.mouseX = mouseInfo.screenX;
+		MoopleGame.mouseY = mouseInfo.clientY;
+	}
+
+	clickHandler(clickInfo)
+	{
+		MoopleGame.clickCounter = 0;
+		MoopleGame.mouseDownX = clickInfo.screenX;
+		MoopleGame.mouseDownY = clickInfo.clientY;
+	}
+
+	isClickedOn(object)
+	{
+		if(MoopleGame.mouseDownX > object.x
+			&& MoopleGame.mouseDownX < object.x + object.width
+			&& MoopleGame.mouseDownY > object.y
+			&& MoopleGame.mouseDownY < object.y + object.height && MoopleGame.clickCounter == 0) 
+		{
+
+			MoopleGame.clickCounter = 1;
+			return true;
+		}
+
+		else if(MoopleGame.clickCounter == 1)
+			return false;
+
+	}
+
+	collisionDetectedBetween(object1, object2)
+	{
+		if(object1.x + object1.width > object2.x 
+			&& object1.x < object2.x + object2.width 
+			&& object1.y + object1.height > object2.y 
+			&& object1.y < object2.y + object2.height)
+			
+			return true;
 	}
 }
 
@@ -147,16 +189,6 @@ class Scene
 				this.ctx.fillStyle = this.gameColor;
 			}
 		}
-	}
-
-	collisionDetectedBetween(object1, object2)
-	{
-		if(object1.x + object1.width > object2.x 
-			&& object1.x < object2.x + object2.width 
-			&& object1.y + object1.height > object2.y 
-			&& object1.y < object2.y + object2.height)
-			
-			return true;
 	}
 }
 
