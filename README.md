@@ -16,6 +16,11 @@ First of all, you need to create game scene
 ```
 var myScene = new Scene();
 myScene.show();
+myScene.update();
+--to close this scene and open a new one:
+firstScene.hide();
+secondScene.show();
+secondScene.update();
 ```
 
 Set scene background color
@@ -34,6 +39,8 @@ sprite.setSize(500,500);
 or
 sprite.width = 500;
 sprite.height = 500;
+sprite.x = 50;
+sprite.y++;
 ```
 
 Creating canvas text
