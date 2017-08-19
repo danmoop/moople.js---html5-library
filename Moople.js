@@ -58,7 +58,7 @@ class MoopleGame
 			&& object1.x < object2.x + object2.width 
 			&& object1.y + object1.height > object2.y 
 			&& object1.y < object2.y + object2.height)
-			
+
 			return true;
 	}
 }
@@ -90,6 +90,32 @@ class Scene
 	setColor(color)
 	{
 		this.gameColor = color;
+	}
+
+	setBackground(img)
+	{
+		this.ctx = MoopleGame.ctx;
+		this.canvas = MoopleGame.canvas;
+
+		var bg = new Image();
+		bg.src = img;
+		bg.width = this.canvas.width;
+		bg.height = this.canvas.height;
+
+		this.ctx.drawImage(bg, 0, 0, bg.idth, bg.height);
+		
+		var bgObject = {
+			src: img,
+			x: 0,
+			y: 0,
+			width: bg.width,
+			height: bg.height
+		}
+
+		this.gameObjects.push(bgObject);
+
+		return bgObject;
+
 	}
 
 	addSprite(source, xcoord, ycoord, w, h)
@@ -203,7 +229,7 @@ class Camera
 	{
 		this.ctx.translate(0, speed);
 	}
-	
+
 	goDown(speed)
 	{
 		this.ctx.translate(0, -speed);
