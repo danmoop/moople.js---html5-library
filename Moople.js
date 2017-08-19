@@ -192,7 +192,35 @@ class Scene
 	}
 }
 
-Scene.prototype.handleKeyboard = function()
+class Camera
+{
+	constructor()
+	{
+		this.ctx = MoopleGame.ctx;
+	}
+
+	goUp(speed)
+	{
+		this.ctx.translate(0, speed);
+	}
+	
+	goDown(speed)
+	{
+		this.ctx.translate(0, -speed);
+	}
+
+	goLeft(speed)
+	{
+		this.ctx.translate(speed, 0);
+	}
+
+	goRight(speed)
+	{
+		this.ctx.translate(-speed, 0);
+	}
+}
+
+MoopleGame.prototype.handleKeyboard = function()
 {
 	_this = this;
 
