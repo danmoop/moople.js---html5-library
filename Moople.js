@@ -7,24 +7,30 @@ class MoopleGame
 
 		else
 		{
-			MoopleGame.canvas = document.createElement('canvas');
-			MoopleGame.ctx = MoopleGame.canvas.getContext('2d');
-			MoopleGame.canvas.setAttribute("width", width);
-			MoopleGame.canvas.setAttribute("height", height);
-			MoopleGame.canvas.setAttribute("id", id);
-			document.body.appendChild(MoopleGame.canvas);
-			MoopleGame.canvas.addEventListener('mousemove', this.mouseHandler);
-			MoopleGame.canvas.addEventListener('click', this.clickHandler);
+			if( typeof width !== 'undefined' && typeof height !== 'undefined' && typeof id !== 'undefined' &&typeof functions !== 'undefined')
+			{
+				MoopleGame.canvas = document.createElement('canvas');
+				MoopleGame.ctx = MoopleGame.canvas.getContext('2d');
+				MoopleGame.canvas.setAttribute("width", width);
+				MoopleGame.canvas.setAttribute("height", height);
+				MoopleGame.canvas.setAttribute("id", id);
+				document.body.appendChild(MoopleGame.canvas);
+				MoopleGame.canvas.addEventListener('mousemove', this.mouseHandler);
+				MoopleGame.canvas.addEventListener('click', this.clickHandler);
 
-			if(typeof functions === 'object')
-				setInterval(functions.update, 0.1337);
+				if(typeof functions === 'object')
+					setInterval(functions.update, 0.1337);
+				else
+					warn('typeof update function should be "object". But your type is ' + typeof functions);
+
+				MoopleGame.minWorldX = -1;
+				MoopleGame.maxWorldX = -1;
+				MoopleGame.minWorldY = -1;
+				MoopleGame.maxWorldY = -1;
+			}
+
 			else
-				warn('typeof update function should be "object". But your type is ' + typeof functions);
-
-			MoopleGame.minWorldX = -1;
-			MoopleGame.maxWorldX = -1;
-			MoopleGame.minWorldY = -1;
-			MoopleGame.maxWorldY = -1;
+				warn('some of parameters in "new MoopleGame" is undefined');
 		}
 	}
 
@@ -139,11 +145,7 @@ class Scene
 
 	addSprite(source, xcoord, ycoord, w, h)
 	{
-		if( typeof source  !== 'undefined' &&
-			typeof xcoord  !== 'undefined' &&
-			typeof ycoord  !== 'undefined' &&
-			typeof w       !== 'undefined' &&
-			typeof h       !== 'undefined' )
+		if( typeof source !== 'undefined' && typeof xcoord !== 'undefined' && typeof ycoord !== 'undefined' && typeof w !== 'undefined' && typeof h       !== 'undefined' )
 		{
 			var Sprite = {
 				src: source,
@@ -187,11 +189,7 @@ class Scene
 
 	addText(txt, fnt, clr, txtX, txtY)
 	{
-		if ( typeof txt   !== 'undefined' &&
-			typeof fnt    !== 'undefined' &&
-			typeof clr    !== 'undefined' &&
-			typeof txtX   !== 'undefined' &&
-			typeof txtY   !== 'undefined' )
+		if ( typeof txt !== 'undefined' && typeof fnt !== 'undefined' && typeof clr !== 'undefined' && typeof txtX !== 'undefined' && typeof txtY !== 'undefined' )
 		{
 			if(this.shown)
 			{
@@ -225,7 +223,7 @@ class Scene
 
 	destroySprite(sprite)
 	{
-		if(sprite)
+		if(typeof sprite !== 'undefined')
 		{
 			var destroyIndex = this.gameObjects.indexOf(sprite);
 
@@ -241,7 +239,7 @@ class Scene
 
 	destroyText(text)
 	{
-		if(text)
+		if(typeof text !== 'undefined')
 		{
 			var destroyTIndex = this.gameText.indexOf(text);
 
@@ -261,7 +259,7 @@ class Scene
 		{
 			this.ctx = MoopleGame.ctx;
 
-			if(    MoopleGame.minWorldX == -1 
+			if( MoopleGame.minWorldX == -1 
 				|| MoopleGame.minWorldY == -1 
 				|| MoopleGame.maxWorldX == -1 
 				|| MoopleGame.maxWorldY == -1 )
@@ -275,14 +273,14 @@ class Scene
 					MoopleGame.minWorldY,
 					MoopleGame.maxWorldX,
 					MoopleGame.maxWorldY
-					);
+				);
 
 				this.ctx.fillRect(
 					MoopleGame.minWorldX,
 					MoopleGame.minWorldY,
 					MoopleGame.maxWorldX,
 					MoopleGame.maxWorldY
-					);
+				);
 
 				this.ctx.fillStyle = this.gameColor;
 
@@ -291,7 +289,7 @@ class Scene
 					MoopleGame.minWorldY,
 					MoopleGame.maxWorldX,
 					MoopleGame.maxWorldY
-					);
+				);
 			}
 
 			for(var i = 0; i < this.gameObjects.length; i++)
@@ -306,7 +304,7 @@ class Scene
 					this.gameObjects[i].y, 
 					this.gameObjects[i].width, 
 					this.gameObjects[i].height
-					);
+				);
 			}
 
 			for(var i = 0; i < this.gameText.length; i++)
