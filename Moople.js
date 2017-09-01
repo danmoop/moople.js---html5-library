@@ -15,10 +15,16 @@ class MoopleGame
 			document.body.appendChild(MoopleGame.canvas);
 			MoopleGame.canvas.addEventListener('mousemove', this.mouseHandler);
 			MoopleGame.canvas.addEventListener('click', this.clickHandler);
+
 			if(typeof functions === 'object')
-				setInterval(functions.update, 1);
+				setInterval(functions.update, 0.1337);
 			else
 				warn('typeof update function should be "object". But your type is ' + typeof functions);
+
+			MoopleGame.minWorldX = -1;
+			MoopleGame.maxWorldX = -1;
+			MoopleGame.minWorldY = -1;
+			MoopleGame.maxWorldY = -1;
 		}
 	}
 
@@ -61,6 +67,14 @@ class MoopleGame
 
 			return true;
 	}
+
+	setWorldBounds(minX, minY, maxX, maxY)
+	{
+		MoopleGame.minWorldX = minX;
+		MoopleGame.maxWorldX = maxX;
+		MoopleGame.minWorldY = minY;
+		MoopleGame.maxWorldY = maxY;
+	}
 }
 
 class Scene
@@ -94,98 +108,151 @@ class Scene
 
 	setBackground(img)
 	{
-		this.ctx = MoopleGame.ctx;
-		this.canvas = MoopleGame.canvas;
+		if(typeof img !== 'undefined')
+		{
+			this.ctx = MoopleGame.ctx;
+			this.canvas = MoopleGame.canvas;
 
-		var bg = new Image();
-		bg.src = img;
-		bg.width = this.canvas.width;
-		bg.height = this.canvas.height;
+			var bg = new Image();
+			bg.src = img;
+			bg.width = this.canvas.width;
+			bg.height = this.canvas.height;
 
-		this.ctx.drawImage(bg, 0, 0, bg.idth, bg.height);
-		
-		var bgObject = {
-			src: img,
-			x: 0,
-			y: 0,
-			width: bg.width,
-			height: bg.height
+			this.ctx.drawImage(bg, 0, 0, bg.idth, bg.height);
+
+			var bgObject = {
+				src: img,
+				x: 0,
+				y: 0,
+				width: bg.width,
+				height: bg.height
+			}
+
+			this.gameObjects.push(bgObject);
+
+			return bgObject;
 		}
 
-		this.gameObjects.push(bgObject);
-
-		return bgObject;
-
+		else
+			warn('Background image is undefined');
 	}
 
 	addSprite(source, xcoord, ycoord, w, h)
 	{
-		var Sprite = {
-			src: source,
-			x: xcoord,
-			y: ycoord,
-			width: w,
-			height: h
-		}
-
-		this.gameObjects.push(Sprite);
-
-		var img = new Image();
-		img.src = Sprite.src;
-		img.width = Sprite.width;
-		img.height = Sprite.height;
-		img.setAttribute("xcoord", Sprite.x);
-		img.setAttribute("ycoord", Sprite.y);
-
-		img.xcoord = xcoord;
-		img.ycoord = ycoord;
-
-		if(this.shown)
+		if( typeof source  !== 'undefined' &&
+			typeof xcoord  !== 'undefined' &&
+			typeof ycoord  !== 'undefined' &&
+			typeof w       !== 'undefined' &&
+			typeof h       !== 'undefined' )
 		{
-			img.onload = function()
-			{
-				this.ctx = MoopleGame.ctx;
-				this.ctx.drawImage(img, img.xcoord, img.ycoord, img.width, img.height);
+			var Sprite = {
+				src: source,
+				x: xcoord,
+				y: ycoord,
+				width: w,
+				height: h
 			}
+
+			this.gameObjects.push(Sprite);
+
+			var img = new Image();
+			img.src = Sprite.src;
+			img.width = Sprite.width;
+			img.height = Sprite.height;
+			img.setAttribute("xcoord", Sprite.x);
+			img.setAttribute("ycoord", Sprite.y);
+
+			img.xcoord = xcoord;
+			img.ycoord = ycoord;
+
+			if(this.shown)
+			{
+				img.onload = function()
+				{
+					this.ctx = MoopleGame.ctx;
+					this.ctx.drawImage(img, img.xcoord, img.ycoord, img.width, img.height);
+				}
+			}
+
+			else
+				warn('Your scene is hidden. Use scene.show()');
+
+			return Sprite;
 		}
 
-		return Sprite;
+		else
+			warn('You"ve missed some parameter during adding sprite'
+				+ '\n It should be "addText(source, x, y, width, height');
 	}
 
 	addText(txt, fnt, clr, txtX, txtY)
-	{	
-		if(this.shown)
+	{
+		if ( typeof txt   !== 'undefined' &&
+			typeof fnt    !== 'undefined' &&
+			typeof clr    !== 'undefined' &&
+			typeof txtX   !== 'undefined' &&
+			typeof txtY   !== 'undefined' )
 		{
-			var Text = {
-				text: txt,
-				font: fnt,
-				color: clr,
-				x: txtX,
-				y: txtY
+			if(this.shown)
+			{
+				var Text = {
+					text: txt,
+					font: fnt,
+					color: clr,
+					x: txtX,
+					y: txtY
+				}
+
+				this.gameText.push(Text);
+
+				this.ctx = MoopleGame.ctx;
+				this.ctx.font = fnt;
+				this.ctx.fillStyle = clr;
+				this.ctx.fillText(txt, txtX, txtY);
+				this.ctx.fillStyle = this.gameColor;
+
+				return Text;
 			}
 
-			this.gameText.push(Text);
-
-			this.ctx = MoopleGame.ctx;
-			this.ctx.font = fnt;
-			this.ctx.fillStyle = clr;
-			this.ctx.fillText(txt, txtX, txtY);
-			this.ctx.fillStyle = this.gameColor;
-
-			return Text;
+			else
+				warn('Your scene is hidden. Use scene.show()');
 		}
+
+		else
+			warn('You"ve missed some parameter during adding text'
+				+ '\n It should be "addText(text, font, color, textX, textY');
 	}
 
 	destroySprite(sprite)
 	{
-		var destroyIndex = this.gameObjects.indexOf(sprite);
-		this.gameObjects.splice(destroyIndex, 1);
+		if(sprite)
+		{
+			var destroyIndex = this.gameObjects.indexOf(sprite);
+
+			if(destroyIndex != -1)
+				this.gameObjects.splice(destroyIndex, 1);
+			else
+				warn(sprite + ' is not found');
+		}
+
+		else
+			warn(sprite + 'is not found')
 	}
 
 	destroyText(text)
 	{
-		var destroyTIndex = this.gameText.indexOf(text);
-		this.gameObjects.splice(destroyTIndex, 1);		
+		if(text)
+		{
+			var destroyTIndex = this.gameText.indexOf(text);
+
+			if(destroyTIndex != -1)
+				this.gameObjects.splice(destroyTIndex, 1);	
+			else
+				warn(text + ' is not found');
+		}
+
+		else
+			warn(text + ' is not found');
 	}
 
 	update()
@@ -193,18 +260,53 @@ class Scene
 		if(this.shown)
 		{
 			this.ctx = MoopleGame.ctx;
-			this.ctx.clearRect(0,0,900,600);
 
-			this.ctx.fillRect(0,0,900,600);
+			if(    MoopleGame.minWorldX == -1 
+				|| MoopleGame.minWorldY == -1 
+				|| MoopleGame.maxWorldX == -1 
+				|| MoopleGame.maxWorldY == -1 )
 
-			this.ctx.fillStyle = this.gameColor;
-			this.ctx.fillRect(0,0,900,600);
+				warn("You forgot to set world bounds. \n 'setWorldBounds(minX, minY, maxX, maxY)'");
+
+			else
+			{
+				this.ctx.clearRect(
+					MoopleGame.minWorldX,
+					MoopleGame.minWorldY,
+					MoopleGame.maxWorldX,
+					MoopleGame.maxWorldY
+					);
+
+				this.ctx.fillRect(
+					MoopleGame.minWorldX,
+					MoopleGame.minWorldY,
+					MoopleGame.maxWorldX,
+					MoopleGame.maxWorldY
+					);
+
+				this.ctx.fillStyle = this.gameColor;
+
+				this.ctx.fillRect(
+					MoopleGame.minWorldX,
+					MoopleGame.minWorldY,
+					MoopleGame.maxWorldX,
+					MoopleGame.maxWorldY
+					);
+			}
 
 			for(var i = 0; i < this.gameObjects.length; i++)
 			{
-				var q = new Image();
-				q.src = this.gameObjects[i].src;
-				this.ctx.drawImage(q, this.gameObjects[i].x, this.gameObjects[i].y, this.gameObjects[i].width, this.gameObjects[i].height);
+				var spriteImg = new Image();
+
+				spriteImg.src = this.gameObjects[i].src;
+
+				this.ctx.drawImage(
+					spriteImg, 
+					this.gameObjects[i].x, 
+					this.gameObjects[i].y, 
+					this.gameObjects[i].width, 
+					this.gameObjects[i].height
+					);
 			}
 
 			for(var i = 0; i < this.gameText.length; i++)
@@ -215,6 +317,8 @@ class Scene
 				this.ctx.fillStyle = this.gameColor;
 			}
 		}
+
+		game.handleKeyboard();
 	}
 }
 
@@ -230,7 +334,7 @@ class Camera
 		this.ctx.translate(0, speed);
 	}
 
-	goDown(speed)
+	goDown(speed) 
 	{
 		this.ctx.translate(0, -speed);
 	}
