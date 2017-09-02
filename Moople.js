@@ -9,8 +9,23 @@ class MoopleGame
 		{
 			MoopleGame.canvas = document.createElement('canvas');
 			MoopleGame.ctx = MoopleGame.canvas.getContext('2d');
-			MoopleGame.canvas.setAttribute("width", width);
-			MoopleGame.canvas.setAttribute("height", height);
+
+			if(width == "fullscreen" && height == "fullscreen")
+			{
+				document.body.style.overflow = "hidden"; 
+				document.body.style.padding = 0; 
+				document.body.style.margin = 0; 
+
+				MoopleGame.canvas.setAttribute("width", window.innerWidth);
+				MoopleGame.canvas.setAttribute("height", window.innerHeight);
+			}
+
+			else if(typeof width === 'number' && typeof height === 'number')
+			{
+				MoopleGame.canvas.setAttribute("width", width);
+				MoopleGame.canvas.setAttribute("height", height);
+			}
+
 			MoopleGame.canvas.setAttribute("id", id);
 			document.body.appendChild(MoopleGame.canvas);
 			MoopleGame.canvas.addEventListener('mousemove', this.mouseHandler);
@@ -43,7 +58,7 @@ class MoopleGame
 
 	isClickedOn(object)
 	{
-		if( MoopleGame.mouseDownX > object.x
+		if(MoopleGame.mouseDownX > object.x
 			&& MoopleGame.mouseDownX < object.x + object.width
 			&& MoopleGame.mouseDownY > object.y
 			&& MoopleGame.mouseDownY < object.y + object.height && MoopleGame.clickCounter == 0) 
@@ -139,7 +154,7 @@ class Scene
 
 	addSprite(source, xcoord, ycoord, w, h)
 	{
-		if(     typeof source  !== 'undefined' &&
+		if( typeof source  !== 'undefined' &&
 			typeof xcoord  !== 'undefined' &&
 			typeof ycoord  !== 'undefined' &&
 			typeof w       !== 'undefined' &&
@@ -185,10 +200,11 @@ class Scene
 				+ '\n It should be "addText(source, x, y, width, height');
 	}
 
-	addText(txt, fnt, clr, txtX, txtY)
+	addText(txt, fnt, sz, clr, txtX, txtY)
 	{
-		if (    typeof txt   !== 'undefined' &&
+		if ( typeof txt   !== 'undefined' &&
 			typeof fnt    !== 'undefined' &&
+			typeof sz     !== 'undefined' &&
 			typeof clr    !== 'undefined' &&
 			typeof txtX   !== 'undefined' &&
 			typeof txtY   !== 'undefined' )
@@ -198,15 +214,48 @@ class Scene
 				var Text = {
 					text: txt,
 					font: fnt,
+					size: sz,
 					color: clr,
 					x: txtX,
 					y: txtY
 				}
 
+				Text.bounce = function(startSize, finalSize, bounce_interval)
+				{
+					var increaseSize = true;
+					var decreaseSize = false;
+					
+					setInterval(function(){
+						if(increaseSize)
+						{
+							Text.size++;
+
+							if(Text.size >= finalSize)
+							{
+								Text.size = finalSize;
+								increaseSize = false;
+								decreaseSize = true;
+							}
+						}
+
+						if(decreaseSize)
+						{
+							Text.size--;
+
+							if(Text.size <= startSize)
+							{
+								Text.size = startSize;
+								increaseSize = true;
+								decreaseSize = false;
+							}
+						}
+					}, bounce_interval);
+				}
+
 				this.gameText.push(Text);
 
 				this.ctx = MoopleGame.ctx;
-				this.ctx.font = fnt;
+				this.ctx.font = sz+"px"+ " " + fnt;
 				this.ctx.fillStyle = clr;
 				this.ctx.fillText(txt, txtX, txtY);
 				this.ctx.fillStyle = this.gameColor;
@@ -261,10 +310,10 @@ class Scene
 		{
 			this.ctx = MoopleGame.ctx;
 
-			if(MoopleGame.minWorldX == -1 
-			    || MoopleGame.minWorldY == -1 
-			    || MoopleGame.maxWorldX == -1 
-			    || MoopleGame.maxWorldY == -1 )
+			if(    MoopleGame.minWorldX == -1 
+				|| MoopleGame.minWorldY == -1 
+				|| MoopleGame.maxWorldX == -1 
+				|| MoopleGame.maxWorldY == -1 )
 
 				warn("You forgot to set world bounds. \n 'setWorldBounds(minX, minY, maxX, maxY)'");
 
@@ -275,14 +324,14 @@ class Scene
 					MoopleGame.minWorldY,
 					MoopleGame.maxWorldX,
 					MoopleGame.maxWorldY
-				);
+					);
 
 				this.ctx.fillRect(
 					MoopleGame.minWorldX,
 					MoopleGame.minWorldY,
 					MoopleGame.maxWorldX,
 					MoopleGame.maxWorldY
-				);
+					);
 
 				this.ctx.fillStyle = this.gameColor;
 
@@ -291,7 +340,7 @@ class Scene
 					MoopleGame.minWorldY,
 					MoopleGame.maxWorldX,
 					MoopleGame.maxWorldY
-				);
+					);
 			}
 
 			for(var i = 0; i < this.gameObjects.length; i++)
@@ -306,12 +355,12 @@ class Scene
 					this.gameObjects[i].y, 
 					this.gameObjects[i].width, 
 					this.gameObjects[i].height
-				);
+					);
 			}
 
 			for(var i = 0; i < this.gameText.length; i++)
 			{
-				this.ctx.font = this.gameText[i].font;
+				this.ctx.font = this.gameText[i].size+"px"+" "+this.gameText[i].font;
 				this.ctx.fillStyle = this.gameText[i].color;
 				this.ctx.fillText(this.gameText[i].text, this.gameText[i].x, this.gameText[i].y);
 				this.ctx.fillStyle = this.gameColor;
@@ -354,11 +403,14 @@ MoopleGame.prototype.handleKeyboard = function()
 {
 	_this = this;
 
-	document.addEventListener('keydown', function(e){
+	document.addEventListener('keydown', function(e)
+	{
 		var property = e.key.toLowerCase() + 'IsDown';
 		_this[property] = true;
-	})
-	document.addEventListener('keyup', function(e){
+	});
+
+	document.addEventListener('keyup', function(e)
+	{
 		var property = e.key.toLowerCase() + 'IsDown';
 		_this[property] = false;
 	});
