@@ -43,7 +43,7 @@ class MoopleGame
 
 	isClickedOn(object)
 	{
-		if(MoopleGame.mouseDownX > object.x
+		if( MoopleGame.mouseDownX > object.x
 			&& MoopleGame.mouseDownX < object.x + object.width
 			&& MoopleGame.mouseDownY > object.y
 			&& MoopleGame.mouseDownY < object.y + object.height && MoopleGame.clickCounter == 0) 
@@ -139,7 +139,7 @@ class Scene
 
 	addSprite(source, xcoord, ycoord, w, h)
 	{
-		if( typeof source  !== 'undefined' &&
+		if(     typeof source  !== 'undefined' &&
 			typeof xcoord  !== 'undefined' &&
 			typeof ycoord  !== 'undefined' &&
 			typeof w       !== 'undefined' &&
@@ -187,7 +187,7 @@ class Scene
 
 	addText(txt, fnt, clr, txtX, txtY)
 	{
-		if ( typeof txt   !== 'undefined' &&
+		if (    typeof txt   !== 'undefined' &&
 			typeof fnt    !== 'undefined' &&
 			typeof clr    !== 'undefined' &&
 			typeof txtX   !== 'undefined' &&
@@ -261,10 +261,10 @@ class Scene
 		{
 			this.ctx = MoopleGame.ctx;
 
-			if(    MoopleGame.minWorldX == -1 
-				|| MoopleGame.minWorldY == -1 
-				|| MoopleGame.maxWorldX == -1 
-				|| MoopleGame.maxWorldY == -1 )
+			if(MoopleGame.minWorldX == -1 
+			    || MoopleGame.minWorldY == -1 
+			    || MoopleGame.maxWorldX == -1 
+			    || MoopleGame.maxWorldY == -1 )
 
 				warn("You forgot to set world bounds. \n 'setWorldBounds(minX, minY, maxX, maxY)'");
 
