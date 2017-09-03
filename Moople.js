@@ -225,32 +225,32 @@ class Scene
 					var increaseSize = true;
 					var decreaseSize = false;
 					
-					setInterval(function(){
-						if(increaseSize)
-						{
-							Text.size++;
-
-							if(Text.size >= finalSize)
+						setInterval(function(){
+							if(increaseSize)
 							{
-								Text.size = finalSize;
-								increaseSize = false;
-								decreaseSize = true;
+								Text.size++;
+
+								if(Text.size >= finalSize)
+								{
+									Text.size = finalSize;
+									increaseSize = false;
+									decreaseSize = true;
+								}
 							}
-						}
 
-						if(decreaseSize)
-						{
-							Text.size--;
-
-							if(Text.size <= startSize)
+							if(decreaseSize)
 							{
-								Text.size = startSize;
-								increaseSize = true;
-								decreaseSize = false;
+								Text.size--;
+
+								if(Text.size <= startSize)
+								{
+									Text.size = startSize;
+									increaseSize = true;
+									decreaseSize = false;
+								}
 							}
-						}
-					}, bounce_interval);
-				}
+						}, bounce_interval);
+					}	
 
 				this.gameText.push(Text);
 
@@ -295,13 +295,13 @@ class Scene
 			var destroyTIndex = this.gameText.indexOf(text);
 
 			if(destroyTIndex != -1)
-				this.gameObjects.splice(destroyTIndex, 1);	
+				this.gameText.splice(destroyTIndex, 1);	
 			else
-				warn(text + ' is not found');
+				warn("Can't destroy text. Reason: " + text + ' is not found');
 		}
 
 		else
-			warn(text + ' is not found');
+			warn("Can't destroy text. Reason: " + text + ' is not found');
 	}
 
 	update()
