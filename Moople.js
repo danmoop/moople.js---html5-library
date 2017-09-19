@@ -2,11 +2,7 @@ class MoopleGame
 {
 	constructor(width, height, id, functions)
 	{
-		if(typeof width     === 'undefined' || 
-		   typeof height    === 'undefined' || 
-		   typeof id        === 'undefined' || 
-		   typeof functions === 'undefined')
-			
+		if(!width || !height || !id || !functions)
 			warn("You've missed some parameter in 'new MoopleGame'");
 
 		else
@@ -233,6 +229,7 @@ class Scene
 							if(increaseSize)
 							{
 								Text.size++;
+								Text.x--;
 
 								if(Text.size >= finalSize)
 								{
@@ -245,7 +242,7 @@ class Scene
 							if(decreaseSize)
 							{
 								Text.size--;
-
+								Text.x++;
 								if(Text.size <= startSize)
 								{
 									Text.size = startSize;
@@ -273,7 +270,7 @@ class Scene
 
 		else
 			warn('You"ve missed some parameter during adding text'
-				+ '\n It should be "addText(text, font, color, textX, textY');
+				+ '\n It should be "addText(text, font, size, color, textX, textY');
 	}
 
 	destroySprite(sprite)
