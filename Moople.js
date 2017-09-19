@@ -2,7 +2,10 @@ class MoopleGame
 {
 	constructor(width, height, id, functions)
 	{
-		if(!width || !height || !id || !functions)
+		if(typeof width     === 'undefined' || 
+ -		   typeof height    === 'undefined' || 
+ -		   typeof id        === 'undefined' || 
+ -		   typeof functions === 'undefined')
 			warn("You've missed some parameter in 'new MoopleGame'");
 
 		else
