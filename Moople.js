@@ -3,9 +3,10 @@ class MoopleGame
 	constructor(width, height, id, functions)
 	{
 		if(typeof width     === 'undefined' || 
- 		   typeof height    === 'undefined' || 
+		   typeof height    === 'undefined' || 
  		   typeof id        === 'undefined' || 
  		   typeof functions === 'undefined')
+
 			warn("You've missed some parameter in 'new MoopleGame'");
 
 		else
@@ -43,20 +44,25 @@ class MoopleGame
 			MoopleGame.maxWorldX = -1;
 			MoopleGame.minWorldY = -1;
 			MoopleGame.maxWorldY = -1;
+
+			MoopleGame.Additional_X_Coordinate = 0;
+			MoopleGame.Additional_Y_Coordinate = 0;
 		}
 	}
 
 	mouseHandler(mouseInfo)
 	{
-		MoopleGame.mouseX = mouseInfo.screenX;
-		MoopleGame.mouseY = mouseInfo.clientY;
+		MoopleGame.mouseX = mouseInfo.screenX + MoopleGame.Additional_X_Coordinate;
+		MoopleGame.mouseY = mouseInfo.clientY + MoopleGame.Additional_Y_Coordinate;
+
+		log("Lib. X: " + MoopleGame.mouseX +"\nLib. Y: " + MoopleGame.mouseY);
 	}
 
 	clickHandler(clickInfo)
 	{
 		MoopleGame.clickCounter = 0;
-		MoopleGame.mouseDownX = clickInfo.screenX;
-		MoopleGame.mouseDownY = clickInfo.clientY;
+		MoopleGame.mouseDownX = clickInfo.screenX + MoopleGame.Additional_X_Coordinate;
+		MoopleGame.mouseDownY = clickInfo.clientY + MoopleGame.Additional_Y_Coordinate;
 	}
 
 	isClickedOn(object)
@@ -225,6 +231,12 @@ class Scene
 
 				Text.bounce = function(startSize, finalSize, bounce_interval)
 				{
+					if( typeof startSize       === 'undefined' ||
+						typeof finalSize       === 'undefined' || 
+						typeof bounce_interval === 'undefined')
+							warn("Some paramteter is missing in 'Text.bounce' function. \n"+
+								+"Code: Text.bounce(startSize, finalSize, bounce_interval)")
+
 					var increaseSize = true;
 					var decreaseSize = false;
 					
@@ -246,6 +258,7 @@ class Scene
 							{
 								Text.size--;
 								Text.x++;
+
 								if(Text.size <= startSize)
 								{
 									Text.size = startSize;
@@ -254,7 +267,7 @@ class Scene
 								}
 							}
 						}, bounce_interval);
-					}	
+					}
 
 				this.gameText.push(Text);
 
@@ -385,21 +398,25 @@ class Camera
 	goUp(speed)
 	{
 		this.ctx.translate(0, speed);
+		MoopleGame.Additional_Y_Coordinate -= 10;
 	}
 
 	goDown(speed) 
 	{
 		this.ctx.translate(0, -speed);
+		MoopleGame.Additional_Y_Coordinate += 10;
 	}
 
 	goLeft(speed)
 	{
 		this.ctx.translate(speed, 0);
+		MoopleGame.Additional_X_Coordinate -= 10;
 	}
 
 	goRight(speed)
 	{
 		this.ctx.translate(-speed, 0);
+		MoopleGame.Additional_X_Coordinate += 10;
 	}
 }
 
