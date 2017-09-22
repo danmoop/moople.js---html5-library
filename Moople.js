@@ -54,8 +54,6 @@ class MoopleGame
 	{
 		MoopleGame.mouseX = mouseInfo.screenX + MoopleGame.Additional_X_Coordinate;
 		MoopleGame.mouseY = mouseInfo.clientY + MoopleGame.Additional_Y_Coordinate;
-
-		log("Lib. X: " + MoopleGame.mouseX +"\nLib. Y: " + MoopleGame.mouseY);
 	}
 
 	clickHandler(clickInfo)
@@ -176,6 +174,50 @@ class Scene
 				width: w,
 				height: h
 			}
+
+			Sprite.bounce = function(startSize, finalSize, bounce_interval)
+				{
+					if( typeof startSize       === 'undefined' ||
+						typeof finalSize       === 'undefined' || 
+						typeof bounce_interval === 'undefined')
+							warn("Some paramteter is missing in 'Sprite.bounce' function. \n"+
+								+"Code: Sprite.bounce(startSize, finalSize, bounce_interval)")
+
+					var increaseSize = true;
+					var decreaseSize = false;
+					
+						setInterval(function(){
+							if(increaseSize)
+							{
+								Sprite.width++;
+								Sprite.height++;
+								Sprite.x = Sprite.x - 0.5;
+
+								if((Sprite.width && Sprite.height) >= finalSize)
+								{
+									Sprite.width = finalSize;
+									Sprite.height = finalSize;
+									increaseSize = false;
+									decreaseSize = true;
+								}
+							}
+
+							if(decreaseSize)
+							{
+								Sprite.width--;
+								Sprite.height--;
+								Sprite.x = Sprite.x + 0.5;
+
+								if((Sprite.width && Sprite.height) <= startSize)
+								{
+									Sprite.width = startSize;
+									Sprite.height = startSize;
+									increaseSize = true;
+									decreaseSize = false;
+								}
+							}
+						}, bounce_interval);
+					}
 
 			this.gameObjects.push(Sprite);
 
