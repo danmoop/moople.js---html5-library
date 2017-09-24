@@ -47,6 +47,8 @@ class MoopleGame
 
 			MoopleGame.Additional_X_Coordinate = 0;
 			MoopleGame.Additional_Y_Coordinate = 0;
+
+			MoopleGame.key_press_counter = 0;
 		}
 	}
 
@@ -78,6 +80,16 @@ class MoopleGame
 		else if(MoopleGame.clickCounter == 1)
 			return false;
 
+	}
+
+	isHoveredOn(object)
+	{
+		if(MoopleGame.mouseX > object.x
+			&& MoopleGame.mouseX < object.x + object.width
+			&& MoopleGame.mouseY > object.y
+			&& MoopleGame.mouseY < object.y + object.height) 
+			
+			return true;
 	}
 
 	collisionDetectedBetween(object1, object2)
@@ -185,6 +197,9 @@ class Scene
 
 					var increaseSize = true;
 					var decreaseSize = false;
+
+					Sprite.width = startSize;
+					Sprite.height = startSize;
 					
 						setInterval(function(){
 							if(increaseSize)
@@ -440,25 +455,25 @@ class Camera
 	goUp(speed)
 	{
 		this.ctx.translate(0, speed);
-		MoopleGame.Additional_Y_Coordinate -= 10;
+		MoopleGame.Additional_Y_Coordinate -= speed;
 	}
 
 	goDown(speed) 
 	{
 		this.ctx.translate(0, -speed);
-		MoopleGame.Additional_Y_Coordinate += 10;
+		MoopleGame.Additional_Y_Coordinate += speed;
 	}
 
 	goLeft(speed)
 	{
 		this.ctx.translate(speed, 0);
-		MoopleGame.Additional_X_Coordinate -= 10;
+		MoopleGame.Additional_X_Coordinate -= speed;
 	}
 
 	goRight(speed)
 	{
 		this.ctx.translate(-speed, 0);
-		MoopleGame.Additional_X_Coordinate += 10;
+		MoopleGame.Additional_X_Coordinate += speed;
 	}
 }
 
@@ -466,6 +481,8 @@ MoopleGame.prototype.handleKeyboard = function()
 {
 	_this = this;
 
+	key_press_counter = 0;
+	
 	document.addEventListener('keydown', function(e)
 	{
 		var property = e.key.toLowerCase() + 'IsDown';
