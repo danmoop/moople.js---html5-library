@@ -3,9 +3,9 @@ class MoopleGame
 	constructor(width, height, id, functions)
 	{
 		if(typeof width     === 'undefined' || 
-		   typeof height    === 'undefined' || 
- 		   typeof id        === 'undefined' || 
- 		   typeof functions === 'undefined')
+			typeof height    === 'undefined' || 
+			typeof id        === 'undefined' || 
+			typeof functions === 'undefined')
 
 			warn("You've missed some parameter in 'new MoopleGame'");
 
@@ -39,11 +39,6 @@ class MoopleGame
 				setInterval(functions.update, 0.1337);
 			else
 				warn('typeof update function should be "object". But your type is ' + typeof functions);
-
-			MoopleGame.minWorldX = -1;
-			MoopleGame.maxWorldX = -1;
-			MoopleGame.minWorldY = -1;
-			MoopleGame.maxWorldY = -1;
 
 			MoopleGame.Additional_X_Coordinate = 0;
 			MoopleGame.Additional_Y_Coordinate = 0;
@@ -101,14 +96,6 @@ class MoopleGame
 
 			return true;
 	}
-
-	setWorldBounds(minX, minY, maxX, maxY)
-	{
-		MoopleGame.minWorldX = minX;
-		MoopleGame.maxWorldX = maxX;
-		MoopleGame.minWorldY = minY;
-		MoopleGame.maxWorldY = maxY;
-	}
 }
 
 class Scene
@@ -118,6 +105,11 @@ class Scene
 		this.shown = false;
 		this.gameObjects = [];
 		this.gameText = [];
+
+		Scene.minWorldX = -1;
+		Scene.minWorldY = -1;
+		Scene.maxWorldX = -1;
+		Scene.maxWorldY = -1;
 	}
 
 	show()
@@ -171,6 +163,14 @@ class Scene
 			warn('Background image is undefined');
 	}
 
+	setWorldBounds(minX, minY, maxX, maxY)
+	{
+		Scene.minWorldX = minX;
+		Scene.minWorldY = minY;
+		Scene.maxWorldX = maxX;
+		Scene.maxWorldY = maxY;
+	}
+
 	addSprite(source, xcoord, ycoord, w, h)
 	{
 		if( typeof source  !== 'undefined' &&
@@ -187,52 +187,89 @@ class Scene
 				height: h
 			}
 
-			Sprite.bounce = function(startSize, finalSize, bounce_interval)
-				{
-					if( typeof startSize       === 'undefined' ||
-						typeof finalSize       === 'undefined' || 
-						typeof bounce_interval === 'undefined')
-							warn("Some paramteter is missing in 'Sprite.bounce' function. \n"+
-								+"Code: Sprite.bounce(startSize, finalSize, bounce_interval)")
+			Sprite.bubble = function(startSize, finalSize, bounce_interval)
+			{
+				if( typeof startSize       === 'undefined' ||
+					typeof finalSize       === 'undefined' || 
+					typeof bounce_interval === 'undefined')
+					warn("Some paramteter is missing in 'Sprite.bubble' function. \n"+
+						+"Code: Sprite.bubble(startSize, finalSize, bounce_interval)")
 
-					var increaseSize = true;
-					var decreaseSize = false;
+				var increaseSize = true;
+				var decreaseSize = false;
 
-					Sprite.width = startSize;
-					Sprite.height = startSize;
-					
-						setInterval(function(){
-							if(increaseSize)
-							{
-								Sprite.width++;
-								Sprite.height++;
-								Sprite.x = Sprite.x - 0.5;
+				Sprite.width = startSize;
+				Sprite.height = startSize;
 
-								if((Sprite.width && Sprite.height) >= finalSize)
-								{
-									Sprite.width = finalSize;
-									Sprite.height = finalSize;
-									increaseSize = false;
-									decreaseSize = true;
-								}
-							}
+				setInterval(function(){
+					if(increaseSize)
+					{
+						Sprite.width++;
+						Sprite.height++;
+						Sprite.x = Sprite.x - 0.5;
 
-							if(decreaseSize)
-							{
-								Sprite.width--;
-								Sprite.height--;
-								Sprite.x = Sprite.x + 0.5;
-
-								if((Sprite.width && Sprite.height) <= startSize)
-								{
-									Sprite.width = startSize;
-									Sprite.height = startSize;
-									increaseSize = true;
-									decreaseSize = false;
-								}
-							}
-						}, bounce_interval);
+						if((Sprite.width && Sprite.height) >= finalSize)
+						{
+							Sprite.width = finalSize;
+							Sprite.height = finalSize;
+							increaseSize = false;
+							decreaseSize = true;
+						}
 					}
+
+					if(decreaseSize)
+					{
+						Sprite.width--;
+						Sprite.height--;
+						Sprite.x = Sprite.x + 0.5;
+
+						if((Sprite.width && Sprite.height) <= startSize)
+						{
+							Sprite.width = startSize;
+							Sprite.height = startSize;
+							increaseSize = true;
+							decreaseSize = false;
+						}
+					}
+				}, bounce_interval);
+			}
+
+			Sprite.bounce = function(intensity, interval)
+			{				
+				if( typeof intensity  === 'undefined' ||
+					typeof interval      === 'undefined')
+					warn("Some paramteter is missing in 'Sprite.bounce' function. \n"+
+						+"Code: Sprite.bubble(intensity, interval)")
+
+				var increasePos = true;
+				var decreasePos = false;
+				var sprite_Start_Y_Pos = Sprite.y;
+
+				setInterval(function(){
+					if(increasePos)
+					{
+						Sprite.y++;
+
+						if(Sprite.y >= sprite_Start_Y_Pos + intensity)
+						{
+							increasePos = false;
+							decreasePos = true;
+						}
+					}
+
+					if(decreasePos)
+					{
+						Sprite.y--;
+
+						if(Sprite.y <= sprite_Start_Y_Pos)
+						{
+							Sprite.y = sprite_Start_Y_Pos;
+							increasePos = true;
+							decreasePos = false;
+						}
+					}
+				}, interval);
+			}
 
 			this.gameObjects.push(Sprite);
 
@@ -286,45 +323,45 @@ class Scene
 					y: txtY
 				}
 
-				Text.bounce = function(startSize, finalSize, bounce_interval)
+				Text.bubble = function(startSize, finalSize, bounce_interval)
 				{
 					if( typeof startSize       === 'undefined' ||
 						typeof finalSize       === 'undefined' || 
 						typeof bounce_interval === 'undefined')
-							warn("Some paramteter is missing in 'Text.bounce' function. \n"+
-								+"Code: Text.bounce(startSize, finalSize, bounce_interval)")
+						warn("Some paramteter is missing in 'Text.bubble' function. \n"+
+							+"Code: Text.bubble(startSize, finalSize, bounce_interval)")
 
 					var increaseSize = true;
 					var decreaseSize = false;
 					
-						setInterval(function(){
-							if(increaseSize)
+					setInterval(function(){
+						if(increaseSize)
+						{
+							Text.size++;
+							Text.x--;
+
+							if(Text.size >= finalSize)
 							{
-								Text.size++;
-								Text.x--;
-
-								if(Text.size >= finalSize)
-								{
-									Text.size = finalSize;
-									increaseSize = false;
-									decreaseSize = true;
-								}
+								Text.size = finalSize;
+								increaseSize = false;
+								decreaseSize = true;
 							}
+						}
 
-							if(decreaseSize)
+						if(decreaseSize)
+						{
+							Text.size--;
+							Text.x++;
+
+							if(Text.size <= startSize)
 							{
-								Text.size--;
-								Text.x++;
-
-								if(Text.size <= startSize)
-								{
-									Text.size = startSize;
-									increaseSize = true;
-									decreaseSize = false;
-								}
+								Text.size = startSize;
+								increaseSize = true;
+								decreaseSize = false;
 							}
-						}, bounce_interval);
-					}
+						}
+					}, bounce_interval);
+				}
 
 				this.gameText.push(Text);
 
@@ -384,38 +421,21 @@ class Scene
 		{
 			this.ctx = MoopleGame.ctx;
 
-			if(    MoopleGame.minWorldX == -1 
-				|| MoopleGame.minWorldY == -1 
-				|| MoopleGame.maxWorldX == -1 
-				|| MoopleGame.maxWorldY == -1 )
+			this.ctx.clearRect(
+				Scene.minWorldX,
+				Scene.minWorldY,
+				Scene.maxWorldX,
+				Scene.maxWorldY
+			);
 
-				warn("You forgot to set world bounds. \n 'setWorldBounds(minX, minY, maxX, maxY)'");
+			this.ctx.fillStyle = this.gameColor;
 
-			else
-			{
-				this.ctx.clearRect(
-					MoopleGame.minWorldX,
-					MoopleGame.minWorldY,
-					MoopleGame.maxWorldX,
-					MoopleGame.maxWorldY
-					);
-
-				this.ctx.fillRect(
-					MoopleGame.minWorldX,
-					MoopleGame.minWorldY,
-					MoopleGame.maxWorldX,
-					MoopleGame.maxWorldY
-					);
-
-				this.ctx.fillStyle = this.gameColor;
-
-				this.ctx.fillRect(
-					MoopleGame.minWorldX,
-					MoopleGame.minWorldY,
-					MoopleGame.maxWorldX,
-					MoopleGame.maxWorldY
-					);
-			}
+			this.ctx.fillRect(
+				Scene.minWorldX,
+				Scene.minWorldY,
+				Scene.maxWorldX,
+				Scene.maxWorldY
+			);
 
 			for(var i = 0; i < this.gameObjects.length; i++)
 			{
@@ -480,8 +500,6 @@ class Camera
 MoopleGame.prototype.handleKeyboard = function()
 {
 	_this = this;
-
-	key_press_counter = 0;
 	
 	document.addEventListener('keydown', function(e)
 	{
