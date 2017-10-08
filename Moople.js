@@ -42,8 +42,6 @@ class MoopleGame
 
 			MoopleGame.Additional_X_Coordinate = 0;
 			MoopleGame.Additional_Y_Coordinate = 0;
-
-			MoopleGame.key_press_counter = 0;
 		}
 	}
 
@@ -110,6 +108,11 @@ class Scene
 		Scene.minWorldY = -1;
 		Scene.maxWorldX = -1;
 		Scene.maxWorldY = -1;
+	}
+
+	getObjects()
+	{
+		log(this.gameObjects);
 	}
 
 	show()
@@ -237,7 +240,7 @@ class Scene
 			Sprite.bounce = function(intensity, interval)
 			{				
 				if( typeof intensity  === 'undefined' ||
-					typeof interval      === 'undefined')
+					typeof interval   === 'undefined')
 					warn("Some paramteter is missing in 'Sprite.bounce' function. \n"+
 						+"Code: Sprite.bubble(intensity, interval)")
 
@@ -300,7 +303,7 @@ class Scene
 
 		else
 			warn('You"ve missed some parameter during adding sprite'
-				+ '\n It should be "addText(source, x, y, width, height');
+				+ '\n It should be "addSprite(source, x, y, width, height');
 	}
 
 	addText(txt, fnt, sz, clr, txtX, txtY)
@@ -385,18 +388,13 @@ class Scene
 
 	destroySprite(sprite)
 	{
-		if(typeof sprite !== 'undefined')
-		{
-			var destroyIndex = this.gameObjects.indexOf(sprite);
+		
+		var _this = this;
 
-			if(destroyIndex != -1)
-				this.gameObjects.splice(destroyIndex, 1);
-			else
-				warn(sprite + ' is not found');
-		}
+		var index_ = _this.gameObjects.indexOf(sprite);
 
-		else
-			warn(sprite + 'is not found')
+		_this.gameObjects.splice(index_, 1);
+		
 	}
 
 	destroyText(text)
@@ -494,6 +492,16 @@ class Camera
 	{
 		this.ctx.translate(-speed, 0);
 		MoopleGame.Additional_X_Coordinate += speed;
+	}
+
+	getX()
+	{
+		log("X: " + MoopleGame.Additional_X_Coordinate);
+	}
+
+	getY()
+	{
+		log("Y: " + MoopleGame.Additional_Y_Coordinate);
 	}
 }
 
