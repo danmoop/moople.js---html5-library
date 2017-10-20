@@ -42,6 +42,10 @@ class MoopleGame
 
 			MoopleGame.Additional_X_Coordinate = 0;
 			MoopleGame.Additional_Y_Coordinate = 0;
+
+			MoopleGame.Lib_Version = 0.13;
+
+			this.displayHelloMessage();
 		}
 	}
 
@@ -93,6 +97,11 @@ class MoopleGame
 			&& object1.y < object2.y + object2.height)
 
 			return true;
+	}
+
+	displayHelloMessage()
+	{
+		console.log ("%cMOOPLE.%cJS%c by Dan Durnev%c | %c Version: " + MoopleGame.Lib_Version,"background-color: #FFFFFF; color: #27ae60; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #9b59b6; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #2c3e50; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:15px; font-weight:bold;");
 	}
 }
 
@@ -395,8 +404,10 @@ class Scene
 
 		var index_ = _this.gameObjects.indexOf(sprite);
 
-		_this.gameObjects.splice(index_, 1);
-		
+		if(index_ != -1)
+			_this.gameObjects.splice(index_, 1);
+		else
+			warn(sprite+" is undefined, can't destroy this sprite");	
 	}
 
 	destroyText(text)
