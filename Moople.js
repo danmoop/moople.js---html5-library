@@ -103,6 +103,7 @@ class Scene
 		this.shown = false;
 		this.gameObjects = [];
 		this.gameText = [];
+		this.spriteSheets = [];
 
 		Scene.minWorldX = -1;
 		Scene.minWorldY = -1;
@@ -187,7 +188,8 @@ class Scene
 				x: xcoord,
 				y: ycoord,
 				width: w,
-				height: h
+				height: h,
+				life: 100
 			}
 
 			Sprite.bubble = function(startSize, finalSize, bounce_interval)
@@ -418,22 +420,12 @@ class Scene
 		if(this.shown)
 		{
 			this.ctx = MoopleGame.ctx;
-
-			this.ctx.clearRect(
-				Scene.minWorldX,
-				Scene.minWorldY,
-				Scene.maxWorldX,
-				Scene.maxWorldY
-			);
+			
+			this.clear();
 
 			this.ctx.fillStyle = this.gameColor;
 
-			this.ctx.fillRect(
-				Scene.minWorldX,
-				Scene.minWorldY,
-				Scene.maxWorldX,
-				Scene.maxWorldY
-			);
+			this.draw();
 
 			for(var i = 0; i < this.gameObjects.length; i++)
 			{
@@ -447,7 +439,10 @@ class Scene
 					this.gameObjects[i].y, 
 					this.gameObjects[i].width, 
 					this.gameObjects[i].height
-					);
+				);
+
+				if(this.gameObjects[i].life <= 0)
+					this.destroySprite(this.gameObjects[i]);
 			}
 
 			for(var i = 0; i < this.gameText.length; i++)
@@ -460,6 +455,27 @@ class Scene
 		}
 
 		game.handleKeyboard();
+	}
+
+	clear()
+	{
+		this.ctx.clearRect(
+			Scene.minWorldX,
+			Scene.minWorldY,
+			Scene.maxWorldX,
+			Scene.maxWorldY
+		);
+	}
+
+	draw()
+	{
+
+		this.ctx.fillRect(
+			Scene.minWorldX,
+			Scene.minWorldY,
+			Scene.maxWorldX,
+			Scene.maxWorldY
+		);
 	}
 }
 
