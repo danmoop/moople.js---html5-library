@@ -51,7 +51,7 @@ To get started using moople.js, download moople.js from [github repository](http
 </html>
 ```
 
-Pay attention!. You should link Moople.js before app.js
+**Pay attention!. You should link Moople.js before app.js**
 
 </div>
 
