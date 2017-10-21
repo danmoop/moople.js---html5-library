@@ -1,0 +1,15 @@
+.startbtn{
+	transition: 0.2s;
+	font-size: 30px; 
+	padding: 20px; 
+	border-radius: 1337px; 
+	border: 1px solid #000; 
+	color: black; 
+	text-decoration: none;
+}
+
+.startbtn:hover{
+	transition: 0.2s;
+	color: white;
+	background: #333;
+}
