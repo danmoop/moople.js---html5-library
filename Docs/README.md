@@ -32,7 +32,23 @@
 To get started using moople.js, download moople.js from [github repository](https://github.com/danmoop/moople.js---html5-library). Unpack it to any folder on your PC. Create index.html and app.js yourself. Link app.js and moople.js to index.html. Index.html should look like this:
 
 ```
-<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <title>Document</title> </head> <body> <script src="Moople.js"></script> <script src="app.js"></script> </body> </html>
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <title>Document</title> 
+</head>
+
+<body> 
+    <script src="Moople.js">
+
+    </script>
+    <script src="app.js">
+
+    </script> 
+</body> 
+
+</html>
 ```
 
 Pay attention!. You should link Moople.js before app.js
