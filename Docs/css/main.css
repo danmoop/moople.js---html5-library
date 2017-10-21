@@ -1,0 +1,23 @@
+li{
+  font-size: 25px;
+}
+
+#contentlink{
+  text-decoration: none;
+}
+
+p{
+  font-size: 25px;
+  font-weight: bold;
+}
+
+xmp{
+  font-size: 20px;
+  background-color: #333;
+  color: white;
+}
+
+hr{
+  padding: 1px;
+  background-color: #333;
+}
