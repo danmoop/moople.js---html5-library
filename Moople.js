@@ -47,7 +47,7 @@ class MoopleGame
 
 			MoopleGame.Lib_Version = 0.14;
 
-			this.displayHelloMessage();
+			//this.displayHelloMessage();
 		}
 	}
 
@@ -446,6 +446,7 @@ class Scene
 
 			this.draw();
 
+
 			/* ---- DRAWING SPRITES ---- */ for(var i = 0; i < this.gameObjects.length; i++)
 			{
 				var spriteImg = new Image();
@@ -458,7 +459,7 @@ class Scene
 					this.gameObjects[i].y, 
 					this.gameObjects[i].width, 
 					this.gameObjects[i].height
-				);
+					);
 
 				if(this.gameObjects[i].life <= 0)
 					this.destroySprite(this.gameObjects[i]);
@@ -472,19 +473,22 @@ class Scene
 				this.ctx.fillStyle = this.gameColor;
 			}
 
-			/* ---- DRAWING UIS ---- */ for(var i = 0; i < UIElement.UIs.length; i++)
+			if(typeof UIElement.UIs !== 'undefined')
 			{
-				var UIobj = new Image();
+				/* ---- DRAWING UIS ---- */ for(var i = 0; i < UIElement.UIs.length; i++)
+				{
+					var UIobj = new Image();
 
-				UIobj.src = UIElement.UIs[i].src;
+					UIobj.src = UIElement.UIs[i].src;
 
-				this.ctx.drawImage(
-					UIobj, 
-					UIElement.UIs[i].x, 
-					UIElement.UIs[i].y, 
-					UIElement.UIs[i].width, 
-					UIElement.UIs[i].height
-				);
+					this.ctx.drawImage(
+						UIobj, 
+						UIElement.UIs[i].x, 
+						UIElement.UIs[i].y, 
+						UIElement.UIs[i].width, 
+						UIElement.UIs[i].height
+						);
+				}
 			}
 
 		}
@@ -502,7 +506,7 @@ class Scene
 			Scene.minWorldY,
 			Scene.maxWorldX,
 			Scene.maxWorldY
-		);
+			);
 	}
 
 	draw()
@@ -513,7 +517,7 @@ class Scene
 			Scene.minWorldY,
 			Scene.maxWorldX,
 			Scene.maxWorldY
-		);
+			);
 	}
 }
 
@@ -574,9 +578,12 @@ class Camera
 		this.ctx.translate(0, speed);
 		MoopleGame.Additional_Y_Coordinate -= speed;
 
-		for(var i = 0; i < UIElement.UIs.length; i++)
+		if(typeof UIElement.UIs !== 'undefined')
 		{
-			UIElement.UIs[i].y -= speed;
+			for(var i = 0; i < UIElement.UIs.length; i++)
+			{
+				UIElement.UIs[i].y -= speed;
+			}
 		}
 	}
 
@@ -585,9 +592,12 @@ class Camera
 		this.ctx.translate(0, -speed);
 		MoopleGame.Additional_Y_Coordinate += speed;
 
-		for(var i = 0; i < UIElement.UIs.length; i++)
+		if(typeof UIElement.UIs !== 'undefined')
 		{
-			UIElement.UIs[i].y += speed;
+			for(var i = 0; i < UIElement.UIs.length; i++)
+			{
+				UIElement.UIs[i].y += speed;
+			}
 		}
 	}
 
@@ -596,9 +606,12 @@ class Camera
 		this.ctx.translate(speed, 0);
 		MoopleGame.Additional_X_Coordinate -= speed;
 
-		for(var i = 0; i < UIElement.UIs.length; i++)
+		if(typeof UIElement.UIs !== 'undefined')
 		{
-			UIElement.UIs[i].x -= speed;
+			for(var i = 0; i < UIElement.UIs.length; i++)
+			{
+				UIElement.UIs[i].x -= speed;
+			}
 		}
 	}
 
@@ -607,9 +620,12 @@ class Camera
 		this.ctx.translate(-speed, 0);
 		MoopleGame.Additional_X_Coordinate += speed;
 
-		for(var i = 0; i < UIElement.UIs.length; i++)
+		if(typeof UIElement.UIs !== 'undefined')
 		{
-			UIElement.UIs[i].x += speed;
+			for(var i = 0; i < UIElement.UIs.length; i++)
+			{
+				UIElement.UIs[i].x += speed;
+			}
 		}
 	}
 
