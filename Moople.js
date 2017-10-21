@@ -18,7 +18,7 @@ class MoopleGame
 			{
 				document.body.style.overflow = "hidden"; 
 				document.body.style.padding = 0; 
-				document.body.style.margin = 0; 
+				document.body.style.margin = 0;
 
 				MoopleGame.canvas.setAttribute("width", window.innerWidth);
 				MoopleGame.canvas.setAttribute("height", window.innerHeight);
@@ -32,8 +32,10 @@ class MoopleGame
 
 			MoopleGame.canvas.setAttribute("id", id);
 			document.body.appendChild(MoopleGame.canvas);
+
 			MoopleGame.canvas.addEventListener('mousemove', this.mouseHandler);
 			MoopleGame.canvas.addEventListener('click', this.clickHandler);
+			window.addEventListener('resize', this.handleResize);
 
 			if(typeof functions === 'object')
 				setInterval(functions.update, 0.1337);
@@ -43,10 +45,16 @@ class MoopleGame
 			MoopleGame.Additional_X_Coordinate = 0;
 			MoopleGame.Additional_Y_Coordinate = 0;
 
-			MoopleGame.Lib_Version = 0.13;
+			MoopleGame.Lib_Version = 0.14;
 
 			this.displayHelloMessage();
 		}
+	}
+
+	handleResize()
+	{
+		MoopleGame.canvas.width = window.innerWidth;
+		MoopleGame.canvas.height = window.innerHeight;
 	}
 
 	mouseHandler(mouseInfo)
@@ -438,7 +446,7 @@ class Scene
 
 			this.draw();
 
-			for(var i = 0; i < this.gameObjects.length; i++)
+			/* ---- DRAWING SPRITES ---- */ for(var i = 0; i < this.gameObjects.length; i++)
 			{
 				var spriteImg = new Image();
 
@@ -456,14 +464,33 @@ class Scene
 					this.destroySprite(this.gameObjects[i]);
 			}
 
-			for(var i = 0; i < this.gameText.length; i++)
+			/* ---- DRAWING TEXT ----*/ for(var i = 0; i < this.gameText.length; i++)
 			{
 				this.ctx.font = this.gameText[i].size+"px"+" "+this.gameText[i].font;
 				this.ctx.fillStyle = this.gameText[i].color;
 				this.ctx.fillText(this.gameText[i].text, this.gameText[i].x, this.gameText[i].y);
 				this.ctx.fillStyle = this.gameColor;
 			}
+
+			/* ---- DRAWING UIS ---- */ for(var i = 0; i < UIElement.UIs.length; i++)
+			{
+				var UIobj = new Image();
+
+				UIobj.src = UIElement.UIs[i].src;
+
+				this.ctx.drawImage(
+					UIobj, 
+					UIElement.UIs[i].x, 
+					UIElement.UIs[i].y, 
+					UIElement.UIs[i].width, 
+					UIElement.UIs[i].height
+				);
+			}
+
 		}
+
+		else
+			warn("Can't update scene. It's hidden. Use scene.show();");
 
 		game.handleKeyboard();
 	}
@@ -490,6 +517,51 @@ class Scene
 	}
 }
 
+class UIElement
+{
+	constructor(source, xcoord, ycoord, w, h)
+	{
+		UIElement.UIs = [];
+		if( typeof source  !== 'undefined' &&
+			typeof xcoord  !== 'undefined' &&
+			typeof ycoord  !== 'undefined' &&
+			typeof w       !== 'undefined' &&
+			typeof h       !== 'undefined' )
+		{
+			var UIObj = {
+				src: source,
+				x: xcoord,
+				y: ycoord,
+				width: w,
+				height: h
+			}
+
+			UIElement.UIs.push(UIObj);
+
+			var UIImg = new Image();
+			UIImg.src = UIObj.src;
+			UIImg.width = UIObj.width;
+			UIImg.height = UIObj.height;
+			UIImg.setAttribute("xcoord", UIObj.x);
+			UIImg.setAttribute("ycoord", UIObj.y);
+
+			UIImg.xcoord = xcoord;
+			UIImg.ycoord = ycoord;
+
+			if(this.shown)
+			{
+				UIImg.onload = function()
+				{
+					this.ctx = MoopleGame.ctx;
+					this.ctx.drawImage(UIImg, UIImg.xcoord, UIImg.ycoord, UIImg.width, UIImg.height);
+				}
+			}
+
+			return UIObj;
+		}
+	}
+}
+
 class Camera
 {
 	constructor()
@@ -501,24 +573,44 @@ class Camera
 	{
 		this.ctx.translate(0, speed);
 		MoopleGame.Additional_Y_Coordinate -= speed;
+
+		for(var i = 0; i < UIElement.UIs.length; i++)
+		{
+			UIElement.UIs[i].y -= speed;
+		}
 	}
 
 	goDown(speed) 
 	{
 		this.ctx.translate(0, -speed);
 		MoopleGame.Additional_Y_Coordinate += speed;
+
+		for(var i = 0; i < UIElement.UIs.length; i++)
+		{
+			UIElement.UIs[i].y += speed;
+		}
 	}
 
 	goLeft(speed)
 	{
 		this.ctx.translate(speed, 0);
 		MoopleGame.Additional_X_Coordinate -= speed;
+
+		for(var i = 0; i < UIElement.UIs.length; i++)
+		{
+			UIElement.UIs[i].x -= speed;
+		}
 	}
 
 	goRight(speed)
 	{
 		this.ctx.translate(-speed, 0);
 		MoopleGame.Additional_X_Coordinate += speed;
+
+		for(var i = 0; i < UIElement.UIs.length; i++)
+		{
+			UIElement.UIs[i].x += speed;
+		}
 	}
 
 	getX()
