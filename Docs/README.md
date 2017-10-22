@@ -41,11 +41,7 @@ To get started using moople.js, download moople.js from [github repository](http
 
 <body> 
     <script src="Moople.js">
-
-    </script>
     <script src="app.js">
-
-    </script> 
 </body> 
 
 </html>
