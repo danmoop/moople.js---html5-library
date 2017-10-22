@@ -68,7 +68,9 @@ To get started using moople.js, download moople.js from [github repository](http
 You create Moople window simple using this command.
 
 ```
-var game = new MoopleGame(width, height, "canv", {update: update}); function update()
+var game = new MoopleGame(width, height, "canv", {update: update}); 
+
+function update()
 {
    ... 
 }
@@ -91,7 +93,9 @@ Width and Height - integers. update - function that is executed 60 times per sec
 You can set window to fullscreen by setting width and height to "fullscreen"
 
 ```
-var game = new MoopleGame("fullscreen", "fullscreen", "canv", {update: update}); function update()
+var game = new MoopleGame("fullscreen", "fullscreen", "canv", {update: update}); 
+
+function update()
 { 
    ...
 }
