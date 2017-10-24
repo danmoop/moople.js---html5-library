@@ -38,14 +38,14 @@ class MoopleGame
 			window.addEventListener('resize', this.handleResize);
 
 			if(typeof functions === 'object')
-				setInterval(functions.update, 0.1337);
+				setInterval(functions.update, 1000/60);
 			else
 				warn('typeof update function should be "object". But your type is ' + typeof functions);
 
 			MoopleGame.Additional_X_Coordinate = 0;
 			MoopleGame.Additional_Y_Coordinate = 0;
 
-			MoopleGame.Lib_Version = 0.14;
+			MoopleGame.Lib_Version = 0.15;
 
 			//this.displayHelloMessage();
 		}
@@ -325,6 +325,10 @@ class Scene
 				+ '\n It should be "addSprite(source, x, y, width, height');
 	}
 
+	addSpriteSheet(xc, yc, w, h)
+	{
+	}
+
 	addText(txt, fnt, sz, clr, txtX, txtY)
 	{
 		if ( typeof txt   !== 'undefined' &&
@@ -463,6 +467,10 @@ class Scene
 
 				if(this.gameObjects[i].life <= 0)
 					this.destroySprite(this.gameObjects[i]);
+			}
+
+			/* ---- DRAWING SPRITESHEETS ----*/ for(var i = 0; i < this.spriteSheets.length; i++)
+			{
 			}
 
 			/* ---- DRAWING TEXT ----*/ for(var i = 0; i < this.gameText.length; i++)
@@ -638,6 +646,15 @@ class Camera
 	{
 		log("Y: " + MoopleGame.Additional_Y_Coordinate);
 	}
+
+	rotateRight(angle)
+	{
+		this.ctx.rotate(angle*Math.PI/360);
+	}
+	rotateLeft(angle)
+	{
+		this.ctx.rotate(-angle*Math.PI/360);
+	}
 }
 
 MoopleGame.prototype.handleKeyboard = function()
@@ -655,6 +672,16 @@ MoopleGame.prototype.handleKeyboard = function()
 		var property = e.key.toLowerCase() + 'IsDown';
 		_this[property] = false;
 	});
+}
+
+function pcw(percent)
+{
+	return window.innerWidth * (percent / 100);
+}
+
+function pch(percent)
+{
+	return window.innerHeight * (percent / 100);
 }
 
 log = console.log;
