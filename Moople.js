@@ -107,6 +107,15 @@ class MoopleGame
 			return true;
 	}
 
+	makeSolid(object1, object2, coords)
+	{
+		if(this.collisionDetectedBetween(object1, object2))
+		{
+			object1.x = coords.x;
+			object1.y = coords.y;
+		}
+	}		
+
 	displayHelloMessage()
 	{
 		console.log ("%cMOOPLE.%cJS%c by Dan Durnev%c | %c Version: " + MoopleGame.Lib_Version,"background-color: #FFFFFF; color: #27ae60; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #9b59b6; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #2c3e50; font-size:15px; font-weight:bold;","background-color: #FFFFFF; color: #e74c3c; font-size:15px; font-weight:bold;");
@@ -136,11 +145,13 @@ class Scene
 	show()
 	{
 		this.shown = true;
+		this.draw();
 	}
 
 	hide()
 	{
 		this.shown = false;
+		this.clear();
 	}
 
 	toggle()
@@ -314,9 +325,6 @@ class Scene
 				}
 			}
 
-			else
-				warn('Your scene is hidden. Use scene.show()');
-
 			return Sprite;
 		}
 
@@ -395,7 +403,7 @@ class Scene
 				this.ctx.font = sz+"px"+ " " + fnt;
 				this.ctx.fillStyle = clr;
 				this.ctx.fillText(txt, txtX, txtY);
-				this.ctx.fillStyle = this.gameColor;
+				this.ctx.fillStyle = clr;
 
 				return Text;
 			}
@@ -443,13 +451,8 @@ class Scene
 		if(this.shown)
 		{
 			this.ctx = MoopleGame.ctx;
-			
-			this.clear();
 
 			this.ctx.fillStyle = this.gameColor;
-
-			this.draw();
-
 
 			/* ---- DRAWING SPRITES ---- */ for(var i = 0; i < this.gameObjects.length; i++)
 			{
@@ -501,14 +504,13 @@ class Scene
 
 		}
 
-		else
-			warn("Can't update scene. It's hidden. Use scene.show();");
-
 		game.handleKeyboard();
 	}
 
 	clear()
 	{
+		this.ctx = MoopleGame.ctx;
+
 		this.ctx.clearRect(
 			Scene.minWorldX,
 			Scene.minWorldY,
@@ -519,13 +521,16 @@ class Scene
 
 	draw()
 	{
+		this.ctx = MoopleGame.ctx;
+
+		this.ctx.fillStyle = this.gameColor;
 
 		this.ctx.fillRect(
 			Scene.minWorldX,
 			Scene.minWorldY,
 			Scene.maxWorldX,
 			Scene.maxWorldY
-			);
+		);
 	}
 }
 
