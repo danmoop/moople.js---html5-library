@@ -1,5 +1,3 @@
-var socket = io.connect('http://localhost:1337');
-
 var game = new MoopleGame("fullscreen", "fullscreen", 'canv', {update: update});
 
 cam = new Camera();
@@ -64,18 +62,6 @@ playBtn.bounce(11, 111);
 howtoBtn.bounce(11, 111);
 optionsBtn.bounce(11, 111);
 
-
-
-/*****************  SOCKET.IO EVENTS  *****************/
-setInterval(function(){
-	socket.emit('requestUsersOnline')
-}, 1000);
-
-socket.on('showOnlineUsers', function(data){
-	usersOnlineCounter = data;
-	usersOnlineText.text = 'Players online: ' + data;
-	usersOnlineText.x = playBtn.x + pcw(1); 
-});
 
 /******************  GAME CODE  ************************/
 function update()
