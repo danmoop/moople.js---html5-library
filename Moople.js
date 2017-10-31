@@ -37,11 +37,6 @@ class MoopleGame
 			MoopleGame.canvas.addEventListener('click', this.clickHandler);
 			window.addEventListener('resize', this.handleResize);
 
-			if(typeof functions === 'object')
-				setInterval(functions.update, 1000/60);
-			else
-				warn('typeof update function should be "object". But your type is ' + typeof functions);
-
 			MoopleGame.Additional_X_Coordinate = 0;
 			MoopleGame.Additional_Y_Coordinate = 0;
 
@@ -107,12 +102,12 @@ class MoopleGame
 			return true;
 	}
 
-	makeSolid(object1, object2, coords)
+	makeSolid(object1, object2, xc, yc)
 	{
 		if(this.collisionDetectedBetween(object1, object2))
 		{
-			object1.x = coords.x;
-			object1.y = coords.y;
+			object1.x = xc;
+			object1.y = yc;
 		}
 	}		
 
@@ -687,6 +682,11 @@ function pcw(percent)
 function pch(percent)
 {
 	return window.innerHeight * (percent / 100);
+}
+
+function render(func)
+{
+	requestAnimationFrame(func);
 }
 
 log = console.log;
