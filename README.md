@@ -1,7 +1,7 @@
 # moople.js---html5-library
 Library that makes canvas drawing a little bit easier.
 
-# Now I use classes instead of prototype functions.
+# [UNMAINTAINED]
 
 Easy to create canvas
 ```
