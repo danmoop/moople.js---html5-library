@@ -1,4 +1,4 @@
-# moople.js---html5-library
+# moople.js---html5-library [0.15]
 Library that makes canvas drawing a little bit easier.
 
 # [UNMAINTAINED]
